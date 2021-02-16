@@ -1,11 +1,11 @@
 {
-    "name": "laravel/jetstream",
-    "description": "Tailwind scaffolding for the Laravel framework.",
+    "name": "alleyinteractive/jetstream-react-organizations",
+    "description": "A fork of Laravel Jetstream replacing teams with organizations.",
     "keywords": ["laravel", "tailwind", "auth"],
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/laravel/jetstream/issues",
-        "source": "https://github.com/laravel/jetstream"
+        "issues": "https://github.com/alleyinteractive/jetstream-react-organizations/issues",
+        "source": "https://github.com/alleyinteractive/jetstream-react-organizations"
     },
     "authors": [
         {
