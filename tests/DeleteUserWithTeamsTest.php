@@ -2,25 +2,25 @@
 
 namespace Laravel\Jetstream\Tests;
 
-use App\Actions\Jetstream\CreateTeam;
-use App\Actions\Jetstream\DeleteTeam;
+use App\Actions\Jetstream\CreateOrganization;
+use App\Actions\Jetstream\DeleteOrganization;
 use App\Actions\Jetstream\DeleteUser;
-use App\Models\Team;
+use App\Models\Organization;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Jetstream;
-use Laravel\Jetstream\Tests\Fixtures\TeamPolicy;
+use Laravel\Jetstream\Tests\Fixtures\OrganizationPolicy;
 use Laravel\Jetstream\Tests\Fixtures\User;
 
-class DeleteUserWithTeamsTest extends OrchestraTestCase
+class DeleteUserWithOrganizationsTest extends OrchestraTestCase
 {
     public function setUp(): void
     {
         parent::setUp();
 
-        Gate::policy(Team::class, TeamPolicy::class);
+        Gate::policy(Organization::class, OrganizationPolicy::class);
         Jetstream::useUserModel(User::class);
     }
 
@@ -28,32 +28,32 @@ class DeleteUserWithTeamsTest extends OrchestraTestCase
     {
         $this->migrate();
 
-        $team = $this->createTeam();
-        $otherTeam = $this->createTeam();
+        $organization = $this->createOrganization();
+        $otherOrganization = $this->createOrganization();
 
-        $otherTeam->users()->attach($team->owner, ['role' => null]);
+        $otherOrganization->users()->attach($organization->owner, ['role' => null]);
 
-        $this->assertSame(2, DB::table('teams')->count());
-        $this->assertSame(1, DB::table('team_user')->count());
+        $this->assertSame(2, DB::table('organizations')->count());
+        $this->assertSame(1, DB::table('organization_user')->count());
 
-        copy(__DIR__.'/../stubs/app/Actions/Jetstream/DeleteUserWithTeams.php', $fixture = __DIR__.'/Fixtures/DeleteUser.php');
+        copy(__DIR__.'/../stubs/app/Actions/Jetstream/DeleteUserWithOrganizations.php', $fixture = __DIR__.'/Fixtures/DeleteUser.php');
 
         require $fixture;
 
-        $action = new DeleteUser(new DeleteTeam);
+        $action = new DeleteUser(new DeleteOrganization);
 
-        $action->delete($team->owner);
+        $action->delete($organization->owner);
 
-        $this->assertNull($team->owner->fresh());
-        $this->assertSame(1, DB::table('teams')->count());
-        $this->assertSame(0, DB::table('team_user')->count());
+        $this->assertNull($organization->owner->fresh());
+        $this->assertSame(1, DB::table('organizations')->count());
+        $this->assertSame(0, DB::table('organization_user')->count());
 
         @unlink($fixture);
     }
 
-    protected function createTeam()
+    protected function createOrganization()
     {
-        $action = new CreateTeam;
+        $action = new CreateOrganization;
 
         $user = User::forceCreate([
             'name' => Str::random(10),
@@ -61,7 +61,7 @@ class DeleteUserWithTeamsTest extends OrchestraTestCase
             'password' => 'secret',
         ]);
 
-        return $action->create($user, ['name' => 'Test Team']);
+        return $action->create($user, ['name' => 'Test Organization']);
     }
 
     protected function migrate()

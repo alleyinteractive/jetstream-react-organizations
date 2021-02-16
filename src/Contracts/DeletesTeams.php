@@ -2,13 +2,13 @@
 
 namespace Laravel\Jetstream\Contracts;
 
-interface DeletesTeams
+interface DeletesOrganizations
 {
     /**
-     * Delete the given team.
+     * Delete the given organization.
      *
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @return void
      */
-    public function delete($team);
+    public function delete($organization);
 }

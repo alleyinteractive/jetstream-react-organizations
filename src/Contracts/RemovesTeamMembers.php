@@ -2,15 +2,15 @@
 
 namespace Laravel\Jetstream\Contracts;
 
-interface RemovesTeamMembers
+interface RemovesOrganizationMembers
 {
     /**
-     * Remove the team member from the given team.
+     * Remove the organization member from the given organization.
      *
      * @param  mixed  $user
-     * @param  mixed  $team
-     * @param  mixed  $teamMember
+     * @param  mixed  $organization
+     * @param  mixed  $organizationMember
      * @return void
      */
-    public function remove($user, $team, $teamMember);
+    public function remove($user, $organization, $organizationMember);
 }

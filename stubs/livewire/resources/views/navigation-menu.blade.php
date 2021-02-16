@@ -19,14 +19,14 @@
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ml-6">
-                <!-- Teams Dropdown -->
-                @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
+                <!-- Organizations Dropdown -->
+                @if (Laravel\Jetstream\Jetstream::hasOrganizationFeatures())
                     <div class="ml-3 relative">
                         <x-jet-dropdown align="right" width="60">
                             <x-slot name="trigger">
                                 <span class="inline-flex rounded-md">
                                     <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150">
-                                        {{ Auth::user()->currentTeam->name }}
+                                        {{ Auth::user()->currentOrganization->name }}
 
                                         <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                             <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -37,31 +37,31 @@
 
                             <x-slot name="content">
                                 <div class="w-60">
-                                    <!-- Team Management -->
+                                    <!-- Organization Management -->
                                     <div class="block px-4 py-2 text-xs text-gray-400">
-                                        {{ __('Manage Team') }}
+                                        {{ __('Manage Organization') }}
                                     </div>
 
-                                    <!-- Team Settings -->
-                                    <x-jet-dropdown-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}">
-                                        {{ __('Team Settings') }}
+                                    <!-- Organization Settings -->
+                                    <x-jet-dropdown-link href="{{ route('organizations.show', Auth::user()->currentOrganization->id) }}">
+                                        {{ __('Organization Settings') }}
                                     </x-jet-dropdown-link>
 
-                                    @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
-                                        <x-jet-dropdown-link href="{{ route('teams.create') }}">
-                                            {{ __('Create New Team') }}
+                                    @can('create', Laravel\Jetstream\Jetstream::newOrganizationModel())
+                                        <x-jet-dropdown-link href="{{ route('organizations.create') }}">
+                                            {{ __('Create New Organization') }}
                                         </x-jet-dropdown-link>
                                     @endcan
 
                                     <div class="border-t border-gray-100"></div>
 
-                                    <!-- Team Switcher -->
+                                    <!-- Organization Switcher -->
                                     <div class="block px-4 py-2 text-xs text-gray-400">
-                                        {{ __('Switch Teams') }}
+                                        {{ __('Switch Organizations') }}
                                     </div>
 
-                                    @foreach (Auth::user()->allTeams() as $team)
-                                        <x-jet-switchable-team :team="$team" />
+                                    @foreach (Auth::user()->allOrganizations() as $organization)
+                                        <x-jet-switchable-organization :organization="$organization" />
                                     @endforeach
                                 </div>
                             </x-slot>
@@ -181,34 +181,34 @@
                     </x-jet-responsive-nav-link>
                 </form>
 
-                <!-- Team Management -->
-                @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
+                <!-- Organization Management -->
+                @if (Laravel\Jetstream\Jetstream::hasOrganizationFeatures())
                     <div class="border-t border-gray-200"></div>
 
                     <div class="block px-4 py-2 text-xs text-gray-400">
-                        {{ __('Manage Team') }}
+                        {{ __('Manage Organization') }}
                     </div>
 
-                    <!-- Team Settings -->
-                    <x-jet-responsive-nav-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}" :active="request()->routeIs('teams.show')">
-                        {{ __('Team Settings') }}
+                    <!-- Organization Settings -->
+                    <x-jet-responsive-nav-link href="{{ route('organizations.show', Auth::user()->currentOrganization->id) }}" :active="request()->routeIs('organizations.show')">
+                        {{ __('Organization Settings') }}
                     </x-jet-responsive-nav-link>
 
-                    @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
-                        <x-jet-responsive-nav-link href="{{ route('teams.create') }}" :active="request()->routeIs('teams.create')">
-                            {{ __('Create New Team') }}
+                    @can('create', Laravel\Jetstream\Jetstream::newOrganizationModel())
+                        <x-jet-responsive-nav-link href="{{ route('organizations.create') }}" :active="request()->routeIs('organizations.create')">
+                            {{ __('Create New Organization') }}
                         </x-jet-responsive-nav-link>
                     @endcan
 
                     <div class="border-t border-gray-200"></div>
 
-                    <!-- Team Switcher -->
+                    <!-- Organization Switcher -->
                     <div class="block px-4 py-2 text-xs text-gray-400">
-                        {{ __('Switch Teams') }}
+                        {{ __('Switch Organizations') }}
                     </div>
 
-                    @foreach (Auth::user()->allTeams() as $team)
-                        <x-jet-switchable-team :team="$team" component="jet-responsive-nav-link" />
+                    @foreach (Auth::user()->allOrganizations() as $organization)
+                        <x-jet-switchable-organization :organization="$organization" component="jet-responsive-nav-link" />
                     @endforeach
                 @endif
             </div>

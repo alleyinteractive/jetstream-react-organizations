@@ -5,7 +5,7 @@ about: 'Report a general library issue. Please ensure your version is still supp
 
 - Jetstream Version: #.#.#
 - Jetstream Stack: Inertia / Livewire
-- Uses Teams: yes / no
+- Uses Organizations: yes / no
 - Laravel Version: #.#.#
 - PHP Version: #.#.#
 - Database Driver & Version:

@@ -4,7 +4,7 @@ namespace Laravel\Jetstream;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TeamInvitation extends Model
+class OrganizationInvitation extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -17,12 +17,12 @@ class TeamInvitation extends Model
     ];
 
     /**
-     * Get the team that the invitation belongs to.
+     * Get the organization that the invitation belongs to.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function team()
+    public function organization()
     {
-        return $this->belongsTo(Jetstream::teamModel());
+        return $this->belongsTo(Jetstream::organizationModel());
     }
 }

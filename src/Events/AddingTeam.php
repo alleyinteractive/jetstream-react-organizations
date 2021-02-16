@@ -4,12 +4,12 @@ namespace Laravel\Jetstream\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
 
-class AddingTeam
+class AddingOrganization
 {
     use Dispatchable;
 
     /**
-     * The team owner.
+     * The organization owner.
      *
      * @var mixed
      */

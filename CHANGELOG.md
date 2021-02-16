@@ -9,7 +9,7 @@
 - Allow custom classes on the dropdown class ([#661](https://github.com/laravel/jetstream/pull/661))
 
 ### Fixed
-- Fix permissions for team create routes ([#669](https://github.com/laravel/jetstream/pull/669))
+- Fix permissions for organization create routes ([#669](https://github.com/laravel/jetstream/pull/669))
 - Fix overflow hidden issue with overlaping elements inside form section ([#668](https://github.com/laravel/jetstream/pull/668))
 
 
@@ -26,7 +26,7 @@
 
 ### Fixed
 - Hide AppLayout header if no slot defined in Page component ([#650](https://github.com/laravel/jetstream/pull/650), [523399f](https://github.com/laravel/jetstream/commit/523399f8496d49a6d6b6a8955b87cda0786be31b))
-- Use custom team member model ([#651](https://github.com/laravel/jetstream/pull/651))
+- Use custom organization member model ([#651](https://github.com/laravel/jetstream/pull/651))
 - Use email input type ([#653](https://github.com/laravel/jetstream/pull/653))
 
 
@@ -46,7 +46,7 @@
 
 ### Changed
 - Automatically select API token when it's created ([#589](https://github.com/laravel/jetstream/pull/589))
-- Change current team of user when creating a new additional team ([#618](https://github.com/laravel/jetstream/pull/618))
+- Change current organization of user when creating a new additional organization ([#618](https://github.com/laravel/jetstream/pull/618))
 - Make text translatable in confirm-password livewire view ([#628](https://github.com/laravel/jetstream/pull/628))
 
 ### Fixed
@@ -60,7 +60,7 @@
 - Allow publishing of missing Inertia files ([#596](https://github.com/laravel/jetstream/pull/596), [b28ee67](https://github.com/laravel/jetstream/commit/b28ee670590312d014448c2c8f2479ec264c64cc))
 
 ### Changed
-- Make button text in team invitation email translatable ([#598](https://github.com/laravel/jetstream/pull/598))
+- Make button text in organization invitation email translatable ([#598](https://github.com/laravel/jetstream/pull/598))
 
 ### Removed
 - Remove unused Vue components ([#596](https://github.com/laravel/jetstream/pull/596))
@@ -154,10 +154,10 @@ A major new Jetstream release. Check out [the announcement post](https://blog.la
 ## [v1.5.2 (2020-10-27)](https://github.com/laravel/jetstream/compare/v1.5.1...v1.5.2)
 
 ### Added
-- Adds custom redirects after creating or deleting a team ([#383](https://github.com/laravel/jetstream/pull/383), [ef3382d](https://github.com/laravel/jetstream/commit/ef3382d316b763211f25eaa7e1ba09ec373d0508))
+- Adds custom redirects after creating or deleting a organization ([#383](https://github.com/laravel/jetstream/pull/383), [ef3382d](https://github.com/laravel/jetstream/commit/ef3382d316b763211f25eaa7e1ba09ec373d0508))
 
 ### Changed
-- Make team show use policies ([#379](https://github.com/laravel/jetstream/pull/379))
+- Make organization show use policies ([#379](https://github.com/laravel/jetstream/pull/379))
 - Use ziggy current method to check active link ([#402](https://github.com/laravel/jetstream/pull/402))
 
 ### Fixed
@@ -196,7 +196,7 @@ A major new Jetstream release. Check out [the announcement post](https://blog.la
 ## [v1.4.0 (2020-10-06)](https://github.com/laravel/jetstream/compare/v1.3.2...v1.4.0)
 
 ### Changed
-- Extract switch team logic into HasTeams trait ([#312](https://github.com/laravel/jetstream/pull/312))
+- Extract switch organization logic into HasOrganizations trait ([#312](https://github.com/laravel/jetstream/pull/312))
 - Use named routes on Inertia with Ziggy ([#314](https://github.com/laravel/jetstream/pull/314), [#316](https://github.com/laravel/jetstream/pull/316))
 - Bump Tailwind & Inertia ([#315](https://github.com/laravel/jetstream/pull/315))
 
@@ -221,7 +221,7 @@ A major new Jetstream release. Check out [the announcement post](https://blog.la
 
 ### Fixed
 - Use session table from the config ([#265](https://github.com/laravel/jetstream/pull/265))
-- Add `:key` buildings for list (for) rendering to `TeamMemberManager.vue` ([#270](https://github.com/laravel/jetstream/pull/270))
+- Add `:key` buildings for list (for) rendering to `OrganizationMemberManager.vue` ([#270](https://github.com/laravel/jetstream/pull/270))
 - Add Submenu Style For When Profile Photos Are Unmanaged ([#275](https://github.com/laravel/jetstream/pull/275), [e717c9e](https://github.com/laravel/jetstream/commit/e717c9e89d5757e12167fa0b729657ecae12fd61))
 - Disable save button while profile pic is uploading ([#266](https://github.com/laravel/jetstream/pull/266))
 
@@ -229,7 +229,7 @@ A major new Jetstream release. Check out [the announcement post](https://blog.la
 ## [v1.3.0 (2020-09-22)](https://github.com/laravel/jetstream/compare/v1.2.1...v1.3.0)
 
 ### Added
-- Added hasTeamRole check on the HasTeams trait ([#251](https://github.com/laravel/jetstream/pull/251), [87b4bf3](https://github.com/laravel/jetstream/commit/87b4bf356387a66f87a90712f0aa4a1ce3c13126))
+- Added hasOrganizationRole check on the HasOrganizations trait ([#251](https://github.com/laravel/jetstream/pull/251), [87b4bf3](https://github.com/laravel/jetstream/commit/87b4bf356387a66f87a90712f0aa4a1ce3c13126))
 
 ### Changed
 - More translation support ([#211](https://github.com/laravel/jetstream/pull/211), [#216](https://github.com/laravel/jetstream/pull/216))
@@ -240,7 +240,7 @@ A major new Jetstream release. Check out [the announcement post](https://blog.la
 ### Fixed
 - Fixed attribute order inside views ([#207](https://github.com/laravel/jetstream/pull/207))
 - Update modal z-index ([#212](https://github.com/laravel/jetstream/pull/212))
-- Add key of v-for teams ([#239](https://github.com/laravel/jetstream/pull/239))
+- Add key of v-for organizations ([#239](https://github.com/laravel/jetstream/pull/239))
 - Correct ID value for email field ([#240](https://github.com/laravel/jetstream/pull/240))
 - Fix purging of CSS classes on production builds ([#249](https://github.com/laravel/jetstream/pull/249))
 - Fix migration ([1883071](https://github.com/laravel/jetstream/commit/1883071d771193e59ef7ed4509576e9b853dac43))
@@ -268,10 +268,10 @@ A major new Jetstream release. Check out [the announcement post](https://blog.la
 - A few more strings that should be translatable ([#192](https://github.com/laravel/jetstream/pull/192))
 
 ### Fixed
-- Refresh navigation dropdown when teams/profile forms save ([#132](https://github.com/laravel/jetstream/pull/132))
+- Refresh navigation dropdown when organizations/profile forms save ([#132](https://github.com/laravel/jetstream/pull/132))
 - Fix API token deletion bug ([#155](https://github.com/laravel/jetstream/pull/155))
-- Fix profile picture distortion for team owners ([#165](https://github.com/laravel/jetstream/pull/165))
-- Fix HasTeams trait to be able to use queries ([#173](https://github.com/laravel/jetstream/pull/173))
+- Fix profile picture distortion for organization owners ([#165](https://github.com/laravel/jetstream/pull/165))
+- Fix HasOrganizations trait to be able to use queries ([#173](https://github.com/laravel/jetstream/pull/173))
 
 
 ## [v1.1.2 (2020-09-10)](https://github.com/laravel/jetstream/compare/v1.1.1...v1.1.2)
@@ -296,21 +296,21 @@ A major new Jetstream release. Check out [the announcement post](https://blog.la
 - Translates more strings ([#101](https://github.com/laravel/jetstream/pull/101))
 
 ### Changed
-- Use static properties for Team and Membership too ([#119](https://github.com/laravel/jetstream/pull/119), [#121](https://github.com/laravel/jetstream/pull/121))
+- Use static properties for Organization and Membership too ([#119](https://github.com/laravel/jetstream/pull/119), [#121](https://github.com/laravel/jetstream/pull/121))
 - Add inertia render hooks ([b2e5729](https://github.com/laravel/jetstream/commit/b2e57294ada600164f5c098b5e0abd1e38f89133), [fd76d88](https://github.com/laravel/jetstream/commit/fd76d8816964388edb4aad988fa9b0659b2e89c7), [4929383](https://github.com/laravel/jetstream/commit/4929383bd98f49885059ec63a702f17b34bc90ce))
 
 ### Fixed
 - Fix for `vendor:publish` routes ([#109](https://github.com/laravel/jetstream/pull/109))
-- Make team menu entry "truncate" ([#114](https://github.com/laravel/jetstream/pull/114))
+- Make organization menu entry "truncate" ([#114](https://github.com/laravel/jetstream/pull/114))
 - Added object-cover to profile images ([#122](https://github.com/laravel/jetstream/pull/122))
-- Inertia: Use check instead of authorize for canCreateTeams ([#129](https://github.com/laravel/jetstream/pull/129))
+- Inertia: Use check instead of authorize for canCreateOrganizations ([#129](https://github.com/laravel/jetstream/pull/129))
 
 
 ## [v1.0.2 (2020-09-08)](https://github.com/laravel/jetstream/compare/v1.0.1...v1.0.2)
 
 ### Changed
 - Update sessions table ([49a6815](https://github.com/laravel/jetstream/commit/49a6815c7f0e5bb18261c7a0df86a3799328f3b3))
-- Fix `ownsTeam` check ([65ce882](https://github.com/laravel/jetstream/commit/65ce8824a8a5a631a9cc02595655b8699bf4b086))
+- Fix `ownsOrganization` check ([65ce882](https://github.com/laravel/jetstream/commit/65ce8824a8a5a631a9cc02595655b8699bf4b086))
 
 
 ## [v1.0.1 (2020-09-08)](https://github.com/laravel/jetstream/compare/v1.0.0...v1.0.1)
@@ -340,7 +340,7 @@ A major new Jetstream release. Check out [the announcement post](https://blog.la
 ## [v0.7.1 (2020-09-08)](https://github.com/laravel/jetstream/compare/v0.7.0...v0.7.1)
 
 ### Added
-- Implement TeamPolicy::create authorization check before creating a team ([#82](https://github.com/laravel/jetstream/pull/82), [42ed0aa](https://github.com/laravel/jetstream/commit/42ed0aabfabc2fa6ae741ef2b67f936c598fd05f))
+- Implement OrganizationPolicy::create authorization check before creating a organization ([#82](https://github.com/laravel/jetstream/pull/82), [42ed0aa](https://github.com/laravel/jetstream/commit/42ed0aabfabc2fa6ae741ef2b67f936c598fd05f))
 - Provide a way of customizing/disabling the default routes ([#67](https://github.com/laravel/jetstream/pull/67))
 - Delete User password confirmation ([#91](https://github.com/laravel/jetstream/pull/91))
 
@@ -348,7 +348,7 @@ A major new Jetstream release. Check out [the announcement post](https://blog.la
 - Make auth views translatable ([#81](https://github.com/laravel/jetstream/pull/81))
 
 ### Fixed
-- Fix API vs Web TeamsHasPermissions, add Tests ([#89](https://github.com/laravel/jetstream/pull/89))
+- Fix API vs Web OrganizationsHasPermissions, add Tests ([#89](https://github.com/laravel/jetstream/pull/89))
 - Fix "remember me" checkbox ([#86](https://github.com/laravel/jetstream/pull/86))
 - Fix `InstallCommand.php` ([#55](https://github.com/laravel/jetstream/pull/55))
 
@@ -358,7 +358,7 @@ A major new Jetstream release. Check out [the announcement post](https://blog.la
 ### Changed
 - Set fully qualified URL for login,register and logout ([#49](https://github.com/laravel/jetstream/pull/49))
 - Use application language on layouts ([#58](https://github.com/laravel/jetstream/pull/58))
-- Use incrementing ids for team ids ([71b67f1](https://github.com/laravel/jetstream/commit/71b67f1e04f6c06741b910ff999aa6370b3ba970))
+- Use incrementing ids for organization ids ([71b67f1](https://github.com/laravel/jetstream/commit/71b67f1e04f6c06741b910ff999aa6370b3ba970))
 
 
 ## [v0.6.4 (2020-09-04)](https://github.com/laravel/jetstream/compare/v0.6.3...v0.6.4)

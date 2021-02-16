@@ -2,23 +2,23 @@
     <app-layout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Team Settings
+                Organization Settings
             </h2>
         </template>
 
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                <update-team-name-form :team="team" :permissions="permissions" />
+                <update-organization-name-form :organization="organization" :permissions="permissions" />
 
-                <team-member-manager class="mt-10 sm:mt-0"
-                            :team="team"
+                <organization-member-manager class="mt-10 sm:mt-0"
+                            :organization="organization"
                             :available-roles="availableRoles"
                             :user-permissions="permissions" />
 
-                <template v-if="permissions.canDeleteTeam && ! team.personal_team">
+                <template v-if="permissions.canDeleteOrganization && ! organization.personal_organization">
                     <jet-section-border />
 
-                    <delete-team-form class="mt-10 sm:mt-0" :team="team" />
+                    <delete-organization-form class="mt-10 sm:mt-0" :organization="organization" />
                 </template>
             </div>
         </div>
@@ -26,25 +26,25 @@
 </template>
 
 <script>
-    import TeamMemberManager from './TeamMemberManager'
+    import OrganizationMemberManager from './OrganizationMemberManager'
     import AppLayout from '@/Layouts/AppLayout'
-    import DeleteTeamForm from './DeleteTeamForm'
+    import DeleteOrganizationForm from './DeleteOrganizationForm'
     import JetSectionBorder from '@/Jetstream/SectionBorder'
-    import UpdateTeamNameForm from './UpdateTeamNameForm'
+    import UpdateOrganizationNameForm from './UpdateOrganizationNameForm'
 
     export default {
         props: [
-            'team',
+            'organization',
             'availableRoles',
             'permissions',
         ],
 
         components: {
             AppLayout,
-            DeleteTeamForm,
+            DeleteOrganizationForm,
             JetSectionBorder,
-            TeamMemberManager,
-            UpdateTeamNameForm,
+            OrganizationMemberManager,
+            UpdateOrganizationNameForm,
         },
     }
 </script>

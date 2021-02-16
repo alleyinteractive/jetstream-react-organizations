@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Laravel\Jetstream\Events\TeamCreated;
-use Laravel\Jetstream\Events\TeamDeleted;
-use Laravel\Jetstream\Events\TeamUpdated;
-use Laravel\Jetstream\Team as JetstreamTeam;
+use Laravel\Jetstream\Events\OrganizationCreated;
+use Laravel\Jetstream\Events\OrganizationDeleted;
+use Laravel\Jetstream\Events\OrganizationUpdated;
+use Laravel\Jetstream\Organization as JetstreamOrganization;
 
-class Team extends JetstreamTeam
+class Organization extends JetstreamOrganization
 {
     use HasFactory;
 
@@ -18,7 +18,7 @@ class Team extends JetstreamTeam
      * @var array
      */
     protected $casts = [
-        'personal_team' => 'boolean',
+        'personal_organization' => 'boolean',
     ];
 
     /**
@@ -28,7 +28,7 @@ class Team extends JetstreamTeam
      */
     protected $fillable = [
         'name',
-        'personal_team',
+        'personal_organization',
     ];
 
     /**
@@ -37,8 +37,8 @@ class Team extends JetstreamTeam
      * @var array
      */
     protected $dispatchesEvents = [
-        'created' => TeamCreated::class,
-        'updated' => TeamUpdated::class,
-        'deleted' => TeamDeleted::class,
+        'created' => OrganizationCreated::class,
+        'updated' => OrganizationUpdated::class,
+        'deleted' => OrganizationDeleted::class,
     ];
 }

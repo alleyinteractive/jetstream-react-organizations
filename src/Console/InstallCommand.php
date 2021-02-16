@@ -16,7 +16,7 @@ class InstallCommand extends Command
      * @var string
      */
     protected $signature = 'jetstream:install {stack : The development stack that should be installed}
-                                              {--teams : Indicates if team support should be installed}
+                                              {--organizations : Indicates if organization support should be installed}
                                               {--composer=global : Absolute path to the Composer binary which should be used to install packages}';
 
     /**
@@ -204,9 +204,9 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../stubs/tests/livewire/TwoFactorAuthenticationSettingsTest.php', base_path('tests/Feature/TwoFactorAuthenticationSettingsTest.php'));
         copy(__DIR__.'/../../stubs/tests/livewire/UpdatePasswordTest.php', base_path('tests/Feature/UpdatePasswordTest.php'));
 
-        // Teams...
-        if ($this->option('teams')) {
-            $this->installLivewireTeamStack();
+        // Organizations...
+        if ($this->option('organizations')) {
+            $this->installLivewireOrganizationStack();
         }
 
         $this->line('');
@@ -215,28 +215,28 @@ class InstallCommand extends Command
     }
 
     /**
-     * Install the Livewire team stack into the application.
+     * Install the Livewire organization stack into the application.
      *
      * @return void
      */
-    protected function installLivewireTeamStack()
+    protected function installLivewireOrganizationStack()
     {
         // Directories...
-        (new Filesystem)->ensureDirectoryExists(resource_path('views/teams'));
+        (new Filesystem)->ensureDirectoryExists(resource_path('views/organizations'));
 
         // Other Views...
-        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/livewire/resources/views/teams', resource_path('views/teams'));
+        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/livewire/resources/views/organizations', resource_path('views/organizations'));
 
         // Tests...
-        copy(__DIR__.'/../../stubs/tests/livewire/CreateTeamTest.php', base_path('tests/Feature/CreateTeamTest.php'));
-        copy(__DIR__.'/../../stubs/tests/livewire/DeleteTeamTest.php', base_path('tests/Feature/DeleteTeamTest.php'));
-        copy(__DIR__.'/../../stubs/tests/livewire/InviteTeamMemberTest.php', base_path('tests/Feature/InviteTeamMemberTest.php'));
-        copy(__DIR__.'/../../stubs/tests/livewire/LeaveTeamTest.php', base_path('tests/Feature/LeaveTeamTest.php'));
-        copy(__DIR__.'/../../stubs/tests/livewire/RemoveTeamMemberTest.php', base_path('tests/Feature/RemoveTeamMemberTest.php'));
-        copy(__DIR__.'/../../stubs/tests/livewire/UpdateTeamMemberRoleTest.php', base_path('tests/Feature/UpdateTeamMemberRoleTest.php'));
-        copy(__DIR__.'/../../stubs/tests/livewire/UpdateTeamNameTest.php', base_path('tests/Feature/UpdateTeamNameTest.php'));
+        copy(__DIR__.'/../../stubs/tests/livewire/CreateOrganizationTest.php', base_path('tests/Feature/CreateOrganizationTest.php'));
+        copy(__DIR__.'/../../stubs/tests/livewire/DeleteOrganizationTest.php', base_path('tests/Feature/DeleteOrganizationTest.php'));
+        copy(__DIR__.'/../../stubs/tests/livewire/InviteOrganizationMemberTest.php', base_path('tests/Feature/InviteOrganizationMemberTest.php'));
+        copy(__DIR__.'/../../stubs/tests/livewire/LeaveOrganizationTest.php', base_path('tests/Feature/LeaveOrganizationTest.php'));
+        copy(__DIR__.'/../../stubs/tests/livewire/RemoveOrganizationMemberTest.php', base_path('tests/Feature/RemoveOrganizationMemberTest.php'));
+        copy(__DIR__.'/../../stubs/tests/livewire/UpdateOrganizationMemberRoleTest.php', base_path('tests/Feature/UpdateOrganizationMemberRoleTest.php'));
+        copy(__DIR__.'/../../stubs/tests/livewire/UpdateOrganizationNameTest.php', base_path('tests/Feature/UpdateOrganizationNameTest.php'));
 
-        $this->ensureApplicationIsTeamCompatible();
+        $this->ensureApplicationIsOrganizationCompatible();
     }
 
     /**
@@ -377,9 +377,9 @@ EOF;
         copy(__DIR__.'/../../stubs/tests/inertia/TwoFactorAuthenticationSettingsTest.php', base_path('tests/Feature/TwoFactorAuthenticationSettingsTest.php'));
         copy(__DIR__.'/../../stubs/tests/inertia/UpdatePasswordTest.php', base_path('tests/Feature/UpdatePasswordTest.php'));
 
-        // Teams...
-        if ($this->option('teams')) {
-            $this->installInertiaTeamStack();
+        // Organizations...
+        if ($this->option('organizations')) {
+            $this->installInertiaOrganizationStack();
         }
 
         $this->line('');
@@ -388,42 +388,42 @@ EOF;
     }
 
     /**
-     * Install the Inertia team stack into the application.
+     * Install the Inertia organization stack into the application.
      *
      * @return void
      */
-    protected function installInertiaTeamStack()
+    protected function installInertiaOrganizationStack()
     {
         // Directories...
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages/Profile'));
 
         // Pages...
-        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia/resources/js/Pages/Teams', resource_path('js/Pages/Teams'));
+        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia/resources/js/Pages/Organizations', resource_path('js/Pages/Organizations'));
 
         // Tests...
-        copy(__DIR__.'/../../stubs/tests/inertia/CreateTeamTest.php', base_path('tests/Feature/CreateTeamTest.php'));
-        copy(__DIR__.'/../../stubs/tests/inertia/DeleteTeamTest.php', base_path('tests/Feature/DeleteTeamTest.php'));
-        copy(__DIR__.'/../../stubs/tests/inertia/InviteTeamMemberTest.php', base_path('tests/Feature/InviteTeamMemberTest.php'));
-        copy(__DIR__.'/../../stubs/tests/inertia/LeaveTeamTest.php', base_path('tests/Feature/LeaveTeamTest.php'));
-        copy(__DIR__.'/../../stubs/tests/inertia/RemoveTeamMemberTest.php', base_path('tests/Feature/RemoveTeamMemberTest.php'));
-        copy(__DIR__.'/../../stubs/tests/inertia/UpdateTeamMemberRoleTest.php', base_path('tests/Feature/UpdateTeamMemberRoleTest.php'));
-        copy(__DIR__.'/../../stubs/tests/inertia/UpdateTeamNameTest.php', base_path('tests/Feature/UpdateTeamNameTest.php'));
+        copy(__DIR__.'/../../stubs/tests/inertia/CreateOrganizationTest.php', base_path('tests/Feature/CreateOrganizationTest.php'));
+        copy(__DIR__.'/../../stubs/tests/inertia/DeleteOrganizationTest.php', base_path('tests/Feature/DeleteOrganizationTest.php'));
+        copy(__DIR__.'/../../stubs/tests/inertia/InviteOrganizationMemberTest.php', base_path('tests/Feature/InviteOrganizationMemberTest.php'));
+        copy(__DIR__.'/../../stubs/tests/inertia/LeaveOrganizationTest.php', base_path('tests/Feature/LeaveOrganizationTest.php'));
+        copy(__DIR__.'/../../stubs/tests/inertia/RemoveOrganizationMemberTest.php', base_path('tests/Feature/RemoveOrganizationMemberTest.php'));
+        copy(__DIR__.'/../../stubs/tests/inertia/UpdateOrganizationMemberRoleTest.php', base_path('tests/Feature/UpdateOrganizationMemberRoleTest.php'));
+        copy(__DIR__.'/../../stubs/tests/inertia/UpdateOrganizationNameTest.php', base_path('tests/Feature/UpdateOrganizationNameTest.php'));
 
-        $this->ensureApplicationIsTeamCompatible();
+        $this->ensureApplicationIsOrganizationCompatible();
     }
 
     /**
-     * Ensure the installed user model is ready for team usage.
+     * Ensure the installed user model is ready for organization usage.
      *
      * @return void
      */
-    protected function ensureApplicationIsTeamCompatible()
+    protected function ensureApplicationIsOrganizationCompatible()
     {
-        // Publish Team Migrations...
-        $this->callSilent('vendor:publish', ['--tag' => 'jetstream-team-migrations', '--force' => true]);
+        // Publish Organization Migrations...
+        $this->callSilent('vendor:publish', ['--tag' => 'jetstream-organization-migrations', '--force' => true]);
 
         // Configuration...
-        $this->replaceInFile('// Features::teams([\'invitations\' => true])', 'Features::teams([\'invitations\' => true])', config_path('jetstream.php'));
+        $this->replaceInFile('// Features::organizations([\'invitations\' => true])', 'Features::organizations([\'invitations\' => true])', config_path('jetstream.php'));
 
         // Directories...
         (new Filesystem)->ensureDirectoryExists(app_path('Actions/Jetstream'));
@@ -432,31 +432,31 @@ EOF;
 
         // Service Providers...
         copy(__DIR__.'/../../stubs/app/Providers/AuthServiceProvider.php', app_path('Providers/AuthServiceProvider.php'));
-        copy(__DIR__.'/../../stubs/app/Providers/JetstreamWithTeamsServiceProvider.php', app_path('Providers/JetstreamServiceProvider.php'));
+        copy(__DIR__.'/../../stubs/app/Providers/JetstreamWithOrganizationsServiceProvider.php', app_path('Providers/JetstreamServiceProvider.php'));
 
         // Models...
         copy(__DIR__.'/../../stubs/app/Models/Membership.php', app_path('Models/Membership.php'));
-        copy(__DIR__.'/../../stubs/app/Models/Team.php', app_path('Models/Team.php'));
-        copy(__DIR__.'/../../stubs/app/Models/TeamInvitation.php', app_path('Models/TeamInvitation.php'));
-        copy(__DIR__.'/../../stubs/app/Models/UserWithTeams.php', app_path('Models/User.php'));
+        copy(__DIR__.'/../../stubs/app/Models/Organization.php', app_path('Models/Organization.php'));
+        copy(__DIR__.'/../../stubs/app/Models/OrganizationInvitation.php', app_path('Models/OrganizationInvitation.php'));
+        copy(__DIR__.'/../../stubs/app/Models/UserWithOrganizations.php', app_path('Models/User.php'));
 
         // Actions...
-        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/AddTeamMember.php', app_path('Actions/Jetstream/AddTeamMember.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/CreateTeam.php', app_path('Actions/Jetstream/CreateTeam.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/DeleteTeam.php', app_path('Actions/Jetstream/DeleteTeam.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/DeleteUserWithTeams.php', app_path('Actions/Jetstream/DeleteUser.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/InviteTeamMember.php', app_path('Actions/Jetstream/InviteTeamMember.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/RemoveTeamMember.php', app_path('Actions/Jetstream/RemoveTeamMember.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/UpdateTeamName.php', app_path('Actions/Jetstream/UpdateTeamName.php'));
+        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/AddOrganizationMember.php', app_path('Actions/Jetstream/AddOrganizationMember.php'));
+        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/CreateOrganization.php', app_path('Actions/Jetstream/CreateOrganization.php'));
+        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/DeleteOrganization.php', app_path('Actions/Jetstream/DeleteOrganization.php'));
+        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/DeleteUserWithOrganizations.php', app_path('Actions/Jetstream/DeleteUser.php'));
+        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/InviteOrganizationMember.php', app_path('Actions/Jetstream/InviteOrganizationMember.php'));
+        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/RemoveOrganizationMember.php', app_path('Actions/Jetstream/RemoveOrganizationMember.php'));
+        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/UpdateOrganizationName.php', app_path('Actions/Jetstream/UpdateOrganizationName.php'));
 
-        copy(__DIR__.'/../../stubs/app/Actions/Fortify/CreateNewUserWithTeams.php', app_path('Actions/Fortify/CreateNewUser.php'));
+        copy(__DIR__.'/../../stubs/app/Actions/Fortify/CreateNewUserWithOrganizations.php', app_path('Actions/Fortify/CreateNewUser.php'));
 
         // Policies...
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/app/Policies', app_path('Policies'));
 
         // Factories...
         copy(__DIR__.'/../../database/factories/UserFactory.php', base_path('database/factories/UserFactory.php'));
-        copy(__DIR__.'/../../database/factories/TeamFactory.php', base_path('database/factories/TeamFactory.php'));
+        copy(__DIR__.'/../../database/factories/OrganizationFactory.php', base_path('database/factories/OrganizationFactory.php'));
     }
 
     /**

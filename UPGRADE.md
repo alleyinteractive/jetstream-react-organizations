@@ -22,25 +22,25 @@ Next, you should upgrade your `laravel/jetstream` dependency to `^2.0` within yo
 
     composer update
 
-#### Remove Team Member Action
+#### Remove Organization Member Action
 
-You should place the new [RemoveTeamMember](https://github.com/laravel/jetstream/blob/2.x/stubs/app/Actions/Jetstream/RemoveTeamMember.php) action within your application's `app/Actions/Jetstream` directory.
+You should place the new [RemoveOrganizationMember](https://github.com/laravel/jetstream/blob/2.x/stubs/app/Actions/Jetstream/RemoveOrganizationMember.php) action within your application's `app/Actions/Jetstream` directory.
 
 In addition, you should register this action with Jetstream by adding the following code to the `boot` method of your application's `JetstreamServiceProvider`:
 
 ```php
-use App\Actions\Jetstream\RemoveTeamMember;
+use App\Actions\Jetstream\RemoveOrganizationMember;
 
-Jetstream::removeTeamMembersUsing(RemoveTeamMember::class);
+Jetstream::removeOrganizationMembersUsing(RemoveOrganizationMember::class);
 ```
 
-#### Team Invitation Model
+#### Organization Invitation Model
 
-You should place the new [TeamInvitation](https://github.com/laravel/jetstream/blob/2.x/stubs/app/Models/TeamInvitation.php) model within your application's `app/Models` directory.
+You should place the new [OrganizationInvitation](https://github.com/laravel/jetstream/blob/2.x/stubs/app/Models/OrganizationInvitation.php) model within your application's `app/Models` directory.
 
-In addition, you should create a `team_invitations` database migration:
+In addition, you should create a `organization_invitations` database migration:
 
-    php artisan make:migration create_team_invitations_table
+    php artisan make:migration create_organization_invitations_table
 
 The generated migration should have the following content:
 
@@ -51,7 +51,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTeamInvitationsTable extends Migration
+class CreateOrganizationInvitationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -60,9 +60,9 @@ class CreateTeamInvitationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('team_invitations', function (Blueprint $table) {
+        Schema::create('organization_invitations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('team_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->string('email')->unique();
             $table->string('role')->nullable();
             $table->timestamps();
@@ -76,7 +76,7 @@ class CreateTeamInvitationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('team_invitations');
+        Schema::dropIfExists('organization_invitations');
     }
 }
 ```

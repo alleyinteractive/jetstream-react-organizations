@@ -2,10 +2,10 @@
 
 namespace Laravel\Jetstream\Contracts;
 
-interface CreatesTeams
+interface CreatesOrganizations
 {
     /**
-     * Validate and create a new team for the given user.
+     * Validate and create a new organization for the given user.
      *
      * @param  mixed  $user
      * @param  array  $input

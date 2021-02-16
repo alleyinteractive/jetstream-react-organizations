@@ -7,40 +7,40 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Jetstream\Jetstream;
 
-class TeamController extends Controller
+class OrganizationController extends Controller
 {
     /**
-     * Show the team management screen.
+     * Show the organization management screen.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $teamId
+     * @param  int  $organizationId
      * @return \Illuminate\View\View
      */
-    public function show(Request $request, $teamId)
+    public function show(Request $request, $organizationId)
     {
-        $team = Jetstream::newTeamModel()->findOrFail($teamId);
+        $organization = Jetstream::newOrganizationModel()->findOrFail($organizationId);
 
-        if (Gate::denies('view', $team)) {
+        if (Gate::denies('view', $organization)) {
             abort(403);
         }
 
-        return view('teams.show', [
+        return view('organizations.show', [
             'user' => $request->user(),
-            'team' => $team,
+            'organization' => $organization,
         ]);
     }
 
     /**
-     * Show the team creation screen.
+     * Show the organization creation screen.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\View\View
      */
     public function create(Request $request)
     {
-        Gate::authorize('create', Jetstream::newTeamModel());
+        Gate::authorize('create', Jetstream::newOrganizationModel());
 
-        return view('teams.create', [
+        return view('organizations.create', [
             'user' => $request->user(),
         ]);
     }

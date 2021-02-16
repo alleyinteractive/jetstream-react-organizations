@@ -2,38 +2,38 @@
 
 namespace Laravel\Jetstream\Tests;
 
-use App\Actions\Jetstream\CreateTeam;
-use App\Actions\Jetstream\RemoveTeamMember;
-use App\Models\Team;
+use App\Actions\Jetstream\CreateOrganization;
+use App\Actions\Jetstream\RemoveOrganizationMember;
+use App\Models\Organization;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
-use Laravel\Jetstream\Events\RemovingTeamMember;
-use Laravel\Jetstream\Events\TeamMemberRemoved;
+use Laravel\Jetstream\Events\RemovingOrganizationMember;
+use Laravel\Jetstream\Events\OrganizationMemberRemoved;
 use Laravel\Jetstream\Jetstream;
-use Laravel\Jetstream\Tests\Fixtures\TeamPolicy;
+use Laravel\Jetstream\Tests\Fixtures\OrganizationPolicy;
 use Laravel\Jetstream\Tests\Fixtures\User;
 
-class RemoveTeamMemberTest extends OrchestraTestCase
+class RemoveOrganizationMemberTest extends OrchestraTestCase
 {
     public function setUp(): void
     {
         parent::setUp();
 
-        Gate::policy(Team::class, TeamPolicy::class);
+        Gate::policy(Organization::class, OrganizationPolicy::class);
 
         Jetstream::useUserModel(User::class);
     }
 
-    public function test_team_members_can_be_removed()
+    public function test_organization_members_can_be_removed()
     {
-        Event::fake([TeamMemberRemoved::class]);
+        Event::fake([OrganizationMemberRemoved::class]);
 
         $this->migrate();
 
-        $team = $this->createTeam();
+        $organization = $this->createOrganization();
 
         $otherUser = User::forceCreate([
             'name' => 'Adam Wathan',
@@ -41,45 +41,45 @@ class RemoveTeamMemberTest extends OrchestraTestCase
             'password' => 'secret',
         ]);
 
-        $team->users()->attach($otherUser, ['role' => null]);
+        $organization->users()->attach($otherUser, ['role' => null]);
 
-        $this->assertCount(1, $team->fresh()->users);
+        $this->assertCount(1, $organization->fresh()->users);
 
-        Auth::login($team->owner);
+        Auth::login($organization->owner);
 
-        $action = new RemoveTeamMember;
+        $action = new RemoveOrganizationMember;
 
-        $action->remove($team->owner, $team, $otherUser);
+        $action->remove($organization->owner, $organization, $otherUser);
 
-        $this->assertCount(0, $team->fresh()->users);
+        $this->assertCount(0, $organization->fresh()->users);
 
-        Event::assertDispatched(TeamMemberRemoved::class);
+        Event::assertDispatched(OrganizationMemberRemoved::class);
     }
 
-    public function test_a_team_owner_cant_remove_themselves()
+    public function test_a_organization_owner_cant_remove_themselves()
     {
         $this->expectException(ValidationException::class);
 
-        Event::fake([RemovingTeamMember::class]);
+        Event::fake([RemovingOrganizationMember::class]);
 
         $this->migrate();
 
-        $team = $this->createTeam();
+        $organization = $this->createOrganization();
 
-        Auth::login($team->owner);
+        Auth::login($organization->owner);
 
-        $action = new RemoveTeamMember;
+        $action = new RemoveOrganizationMember;
 
-        $action->remove($team->owner, $team, $team->owner);
+        $action->remove($organization->owner, $organization, $organization->owner);
     }
 
-    public function test_the_user_must_be_authorized_to_remove_team_members()
+    public function test_the_user_must_be_authorized_to_remove_organization_members()
     {
         $this->expectException(AuthorizationException::class);
 
         $this->migrate();
 
-        $team = $this->createTeam();
+        $organization = $this->createOrganization();
 
         $adam = User::forceCreate([
             'name' => 'Adam Wathan',
@@ -93,19 +93,19 @@ class RemoveTeamMemberTest extends OrchestraTestCase
             'password' => 'secret',
         ]);
 
-        $team->users()->attach($adam, ['role' => null]);
-        $team->users()->attach($abigail, ['role' => null]);
+        $organization->users()->attach($adam, ['role' => null]);
+        $organization->users()->attach($abigail, ['role' => null]);
 
-        Auth::login($team->owner);
+        Auth::login($organization->owner);
 
-        $action = new RemoveTeamMember;
+        $action = new RemoveOrganizationMember;
 
-        $action->remove($adam, $team, $abigail);
+        $action->remove($adam, $organization, $abigail);
     }
 
-    protected function createTeam()
+    protected function createOrganization()
     {
-        $action = new CreateTeam;
+        $action = new CreateOrganization;
 
         $user = User::forceCreate([
             'name' => 'Taylor Otwell',
@@ -113,7 +113,7 @@ class RemoveTeamMemberTest extends OrchestraTestCase
             'password' => 'secret',
         ]);
 
-        return $action->create($user, ['name' => 'Test Team']);
+        return $action->create($user, ['name' => 'Test Organization']);
     }
 
     protected function migrate()

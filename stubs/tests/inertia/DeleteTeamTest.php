@@ -2,39 +2,39 @@
 
 namespace Tests\Feature;
 
-use App\Models\Team;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class DeleteTeamTest extends TestCase
+class DeleteOrganizationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_teams_can_be_deleted()
+    public function test_organizations_can_be_deleted()
     {
-        $this->actingAs($user = User::factory()->withPersonalTeam()->create());
+        $this->actingAs($user = User::factory()->withPersonalOrganization()->create());
 
-        $user->ownedTeams()->save($team = Team::factory()->make([
-            'personal_team' => false,
+        $user->ownedOrganizations()->save($organization = Organization::factory()->make([
+            'personal_organization' => false,
         ]));
 
-        $team->users()->attach(
+        $organization->users()->attach(
             $otherUser = User::factory()->create(), ['role' => 'test-role']
         );
 
-        $response = $this->delete('/teams/'.$team->id);
+        $response = $this->delete('/organizations/'.$organization->id);
 
-        $this->assertNull($team->fresh());
-        $this->assertCount(0, $otherUser->fresh()->teams);
+        $this->assertNull($organization->fresh());
+        $this->assertCount(0, $otherUser->fresh()->organizations);
     }
 
-    public function test_personal_teams_cant_be_deleted()
+    public function test_personal_organizations_cant_be_deleted()
     {
-        $this->actingAs($user = User::factory()->withPersonalTeam()->create());
+        $this->actingAs($user = User::factory()->withPersonalOrganization()->create());
 
-        $response = $this->delete('/teams/'.$user->currentTeam->id);
+        $response = $this->delete('/organizations/'.$user->currentOrganization->id);
 
-        $this->assertNotNull($user->currentTeam->fresh());
+        $this->assertNotNull($user->currentOrganization->fresh());
     }
 }

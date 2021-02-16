@@ -6,19 +6,19 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Laravel\Jetstream\Jetstream;
 
-class CurrentTeamController extends Controller
+class CurrentOrganizationController extends Controller
 {
     /**
-     * Update the authenticated user's current team.
+     * Update the authenticated user's current organization.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request)
     {
-        $team = Jetstream::newTeamModel()->findOrFail($request->team_id);
+        $organization = Jetstream::newOrganizationModel()->findOrFail($request->organization_id);
 
-        if (! $request->user()->switchTeam($team)) {
+        if (! $request->user()->switchOrganization($organization)) {
             abort(403);
         }
 

@@ -1,41 +1,41 @@
 <template>
     <jet-action-section>
         <template #title>
-            Delete Team
+            Delete Organization
         </template>
 
         <template #description>
-            Permanently delete this team.
+            Permanently delete this organization.
         </template>
 
         <template #content>
             <div class="max-w-xl text-sm text-gray-600">
-                Once a team is deleted, all of its resources and data will be permanently deleted. Before deleting this team, please download any data or information regarding this team that you wish to retain.
+                Once a organization is deleted, all of its resources and data will be permanently deleted. Before deleting this organization, please download any data or information regarding this organization that you wish to retain.
             </div>
 
             <div class="mt-5">
-                <jet-danger-button @click.native="confirmTeamDeletion">
-                    Delete Team
+                <jet-danger-button @click.native="confirmOrganizationDeletion">
+                    Delete Organization
                 </jet-danger-button>
             </div>
 
-            <!-- Delete Team Confirmation Modal -->
-            <jet-confirmation-modal :show="confirmingTeamDeletion" @close="confirmingTeamDeletion = false">
+            <!-- Delete Organization Confirmation Modal -->
+            <jet-confirmation-modal :show="confirmingOrganizationDeletion" @close="confirmingOrganizationDeletion = false">
                 <template #title>
-                    Delete Team
+                    Delete Organization
                 </template>
 
                 <template #content>
-                    Are you sure you want to delete this team? Once a team is deleted, all of its resources and data will be permanently deleted.
+                    Are you sure you want to delete this organization? Once a organization is deleted, all of its resources and data will be permanently deleted.
                 </template>
 
                 <template #footer>
-                    <jet-secondary-button @click.native="confirmingTeamDeletion = false">
+                    <jet-secondary-button @click.native="confirmingOrganizationDeletion = false">
                         Nevermind
                     </jet-secondary-button>
 
-                    <jet-danger-button class="ml-2" @click.native="deleteTeam" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                        Delete Team
+                    <jet-danger-button class="ml-2" @click.native="deleteOrganization" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                        Delete Organization
                     </jet-danger-button>
                 </template>
             </jet-confirmation-modal>
@@ -50,7 +50,7 @@
     import JetSecondaryButton from '@/Jetstream/SecondaryButton'
 
     export default {
-        props: ['team'],
+        props: ['organization'],
 
         components: {
             JetActionSection,
@@ -61,7 +61,7 @@
 
         data() {
             return {
-                confirmingTeamDeletion: false,
+                confirmingOrganizationDeletion: false,
                 deleting: false,
 
                 form: this.$inertia.form()
@@ -69,13 +69,13 @@
         },
 
         methods: {
-            confirmTeamDeletion() {
-                this.confirmingTeamDeletion = true
+            confirmOrganizationDeletion() {
+                this.confirmingOrganizationDeletion = true
             },
 
-            deleteTeam() {
-                this.form.delete(route('teams.destroy', this.team), {
-                    errorBag: 'deleteTeam'
+            deleteOrganization() {
+                this.form.delete(route('organizations.destroy', this.organization), {
+                    errorBag: 'deleteOrganization'
                 });
             },
         },

@@ -2,10 +2,10 @@
 
 namespace Laravel\Jetstream\Tests\Fixtures;
 
-use App\Models\Team;
+use App\Models\Organization;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class TeamPolicy
+class OrganizationPolicy
 {
     use HandlesAuthorization;
 
@@ -24,12 +24,12 @@ class TeamPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Team  $team
+     * @param  \App\Models\Organization  $organization
      * @return mixed
      */
-    public function view(User $user, Team $team)
+    public function view(User $user, Organization $organization)
     {
-        return $user->belongsToTeam($team);
+        return $user->belongsToOrganization($organization);
     }
 
     /**
@@ -47,59 +47,59 @@ class TeamPolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Team  $team
+     * @param  \App\Models\Organization  $organization
      * @return mixed
      */
-    public function update(User $user, Team $team)
+    public function update(User $user, Organization $organization)
     {
-        return $user->ownsTeam($team);
+        return $user->ownsOrganization($organization);
     }
 
     /**
-     * Determine whether the user can add team members.
+     * Determine whether the user can add organization members.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Team  $team
+     * @param  \App\Models\Organization  $organization
      * @return mixed
      */
-    public function addTeamMember(User $user, Team $team)
+    public function addOrganizationMember(User $user, Organization $organization)
     {
-        return $user->ownsTeam($team);
+        return $user->ownsOrganization($organization);
     }
 
     /**
-     * Determine whether the user can update team member permissions.
+     * Determine whether the user can update organization member permissions.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Team  $team
+     * @param  \App\Models\Organization  $organization
      * @return mixed
      */
-    public function updateTeamMember(User $user, Team $team)
+    public function updateOrganizationMember(User $user, Organization $organization)
     {
-        return $user->ownsTeam($team);
+        return $user->ownsOrganization($organization);
     }
 
     /**
-     * Determine whether the user can remove team members.
+     * Determine whether the user can remove organization members.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Team  $team
+     * @param  \App\Models\Organization  $organization
      * @return mixed
      */
-    public function removeTeamMember(User $user, Team $team)
+    public function removeOrganizationMember(User $user, Organization $organization)
     {
-        return $user->ownsTeam($team);
+        return $user->ownsOrganization($organization);
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Team  $team
+     * @param  \App\Models\Organization  $organization
      * @return mixed
      */
-    public function delete(User $user, Team $team)
+    public function delete(User $user, Organization $organization)
     {
-        return $user->ownsTeam($team);
+        return $user->ownsOrganization($organization);
     }
 }

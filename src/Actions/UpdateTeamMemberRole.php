@@ -4,24 +4,24 @@ namespace Laravel\Jetstream\Actions;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
-use Laravel\Jetstream\Events\TeamMemberUpdated;
+use Laravel\Jetstream\Events\OrganizationMemberUpdated;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Jetstream\Rules\Role;
 
-class UpdateTeamMemberRole
+class UpdateOrganizationMemberRole
 {
     /**
-     * Update the role for the given team member.
+     * Update the role for the given organization member.
      *
      * @param  mixed  $user
-     * @param  mixed  $team
-     * @param  int  $teamMemberId
+     * @param  mixed  $organization
+     * @param  int  $organizationMemberId
      * @param  string  $role
      * @return void
      */
-    public function update($user, $team, $teamMemberId, string $role)
+    public function update($user, $organization, $organizationMemberId, string $role)
     {
-        Gate::forUser($user)->authorize('updateTeamMember', $team);
+        Gate::forUser($user)->authorize('updateOrganizationMember', $organization);
 
         Validator::make([
             'role' => $role,
@@ -29,10 +29,10 @@ class UpdateTeamMemberRole
             'role' => ['required', 'string', new Role],
         ])->validate();
 
-        $team->users()->updateExistingPivot($teamMemberId, [
+        $organization->users()->updateExistingPivot($organizationMemberId, [
             'role' => $role,
         ]);
 
-        TeamMemberUpdated::dispatch($team->fresh(), Jetstream::findUserByIdOrFail($teamMemberId));
+        OrganizationMemberUpdated::dispatch($organization->fresh(), Jetstream::findUserByIdOrFail($organizationMemberId));
     }
 }

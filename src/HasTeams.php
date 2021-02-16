@@ -5,193 +5,193 @@ namespace Laravel\Jetstream;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 
-trait HasTeams
+trait HasOrganizations
 {
     /**
-     * Determine if the given team is the current team.
+     * Determine if the given organization is the current organization.
      *
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @return bool
      */
-    public function isCurrentTeam($team)
+    public function isCurrentOrganization($organization)
     {
-        return $team->id === $this->currentTeam->id;
+        return $organization->id === $this->currentOrganization->id;
     }
 
     /**
-     * Get the current team of the user's context.
+     * Get the current organization of the user's context.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function currentTeam()
+    public function currentOrganization()
     {
-        if (is_null($this->current_team_id) && $this->id) {
-            $this->switchTeam($this->personalTeam());
+        if (is_null($this->current_organization_id) && $this->id) {
+            $this->switchOrganization($this->personalOrganization());
         }
 
-        return $this->belongsTo(Jetstream::teamModel(), 'current_team_id');
+        return $this->belongsTo(Jetstream::organizationModel(), 'current_organization_id');
     }
 
     /**
-     * Switch the user's context to the given team.
+     * Switch the user's context to the given organization.
      *
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @return bool
      */
-    public function switchTeam($team)
+    public function switchOrganization($organization)
     {
-        if (! $this->belongsToTeam($team)) {
+        if (! $this->belongsToOrganization($organization)) {
             return false;
         }
 
         $this->forceFill([
-            'current_team_id' => $team->id,
+            'current_organization_id' => $organization->id,
         ])->save();
 
-        $this->setRelation('currentTeam', $team);
+        $this->setRelation('currentOrganization', $organization);
 
         return true;
     }
 
     /**
-     * Get all of the teams the user owns or belongs to.
+     * Get all of the organizations the user owns or belongs to.
      *
      * @return \Illuminate\Collections\Collection
      */
-    public function allTeams()
+    public function allOrganizations()
     {
-        return $this->ownedTeams->merge($this->teams)->sortBy('name');
+        return $this->ownedOrganizations->merge($this->organizations)->sortBy('name');
     }
 
     /**
-     * Get all of the teams the user owns.
+     * Get all of the organizations the user owns.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function ownedTeams()
+    public function ownedOrganizations()
     {
-        return $this->hasMany(Jetstream::teamModel());
+        return $this->hasMany(Jetstream::organizationModel());
     }
 
     /**
-     * Get all of the teams the user belongs to.
+     * Get all of the organizations the user belongs to.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function teams()
+    public function organizations()
     {
-        return $this->belongsToMany(Jetstream::teamModel(), Jetstream::membershipModel())
+        return $this->belongsToMany(Jetstream::organizationModel(), Jetstream::membershipModel())
                         ->withPivot('role')
                         ->withTimestamps()
                         ->as('membership');
     }
 
     /**
-     * Get the user's "personal" team.
+     * Get the user's "personal" organization.
      *
-     * @return \App\Models\Team
+     * @return \App\Models\Organization
      */
-    public function personalTeam()
+    public function personalOrganization()
     {
-        return $this->ownedTeams->where('personal_team', true)->first();
+        return $this->ownedOrganizations->where('personal_organization', true)->first();
     }
 
     /**
-     * Determine if the user owns the given team.
+     * Determine if the user owns the given organization.
      *
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @return bool
      */
-    public function ownsTeam($team)
+    public function ownsOrganization($organization)
     {
-        return $this->id == $team->{$this->getForeignKey()};
+        return $this->id == $organization->{$this->getForeignKey()};
     }
 
     /**
-     * Determine if the user belongs to the given team.
+     * Determine if the user belongs to the given organization.
      *
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @return bool
      */
-    public function belongsToTeam($team)
+    public function belongsToOrganization($organization)
     {
-        return $this->teams->contains(function ($t) use ($team) {
-            return $t->id === $team->id;
-        }) || $this->ownsTeam($team);
+        return $this->organizations->contains(function ($t) use ($organization) {
+            return $t->id === $organization->id;
+        }) || $this->ownsOrganization($organization);
     }
 
     /**
-     * Get the role that the user has on the team.
+     * Get the role that the user has on the organization.
      *
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @return \Laravel\Jetstream\Role
      */
-    public function teamRole($team)
+    public function organizationRole($organization)
     {
-        if ($this->ownsTeam($team)) {
+        if ($this->ownsOrganization($organization)) {
             return new OwnerRole;
         }
 
-        if (! $this->belongsToTeam($team)) {
+        if (! $this->belongsToOrganization($organization)) {
             return;
         }
 
-        return Jetstream::findRole($team->users->where(
+        return Jetstream::findRole($organization->users->where(
             'id', $this->id
         )->first()->membership->role);
     }
 
     /**
-     * Determine if the user has the given role on the given team.
+     * Determine if the user has the given role on the given organization.
      *
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @param  string  $role
      * @return bool
      */
-    public function hasTeamRole($team, string $role)
+    public function hasOrganizationRole($organization, string $role)
     {
-        if ($this->ownsTeam($team)) {
+        if ($this->ownsOrganization($organization)) {
             return true;
         }
 
-        return $this->belongsToTeam($team) && optional(Jetstream::findRole($team->users->where(
+        return $this->belongsToOrganization($organization) && optional(Jetstream::findRole($organization->users->where(
             'id', $this->id
         )->first()->membership->role))->key === $role;
     }
 
     /**
-     * Get the user's permissions for the given team.
+     * Get the user's permissions for the given organization.
      *
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @return array
      */
-    public function teamPermissions($team)
+    public function organizationPermissions($organization)
     {
-        if ($this->ownsTeam($team)) {
+        if ($this->ownsOrganization($organization)) {
             return ['*'];
         }
 
-        if (! $this->belongsToTeam($team)) {
+        if (! $this->belongsToOrganization($organization)) {
             return [];
         }
 
-        return $this->teamRole($team)->permissions;
+        return $this->organizationRole($organization)->permissions;
     }
 
     /**
-     * Determine if the user has the given permission on the given team.
+     * Determine if the user has the given permission on the given organization.
      *
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @param  string  $permission
      * @return bool
      */
-    public function hasTeamPermission($team, string $permission)
+    public function hasOrganizationPermission($organization, string $permission)
     {
-        if ($this->ownsTeam($team)) {
+        if ($this->ownsOrganization($organization)) {
             return true;
         }
 
-        if (! $this->belongsToTeam($team)) {
+        if (! $this->belongsToOrganization($organization)) {
             return false;
         }
 
@@ -201,7 +201,7 @@ trait HasTeams
             return false;
         }
 
-        $permissions = $this->teamPermissions($team);
+        $permissions = $this->organizationPermissions($organization);
 
         return in_array($permission, $permissions) ||
                in_array('*', $permissions) ||

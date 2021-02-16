@@ -2,30 +2,30 @@
 
 namespace Laravel\Jetstream\Tests;
 
-use App\Actions\Jetstream\CreateTeam;
+use App\Actions\Jetstream\CreateOrganization;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Jetstream\Jetstream;
-use Laravel\Jetstream\Team;
-use Laravel\Jetstream\Tests\Fixtures\TeamPolicy;
+use Laravel\Jetstream\Organization;
+use Laravel\Jetstream\Tests\Fixtures\OrganizationPolicy;
 use Laravel\Jetstream\Tests\Fixtures\User;
 use Laravel\Sanctum\Sanctum;
 use Laravel\Sanctum\TransientToken;
 
-class TeamBehaviorTest extends OrchestraTestCase
+class OrganizationBehaviorTest extends OrchestraTestCase
 {
     public function setUp(): void
     {
         parent::setUp();
 
-        Gate::policy(\App\Models\Team::class, TeamPolicy::class);
+        Gate::policy(\App\Models\Organization::class, OrganizationPolicy::class);
         Jetstream::useUserModel(User::class);
     }
 
-    public function test_team_relationship_methods()
+    public function test_organization_relationship_methods()
     {
         $this->migrate();
 
-        $action = new CreateTeam;
+        $action = new CreateOrganization;
 
         $user = User::forceCreate([
             'name' => 'Taylor Otwell',
@@ -33,66 +33,66 @@ class TeamBehaviorTest extends OrchestraTestCase
             'password' => 'secret',
         ]);
 
-        $team = $action->create($user, ['name' => 'Test Team']);
+        $organization = $action->create($user, ['name' => 'Test Organization']);
 
-        $this->assertInstanceOf(Team::class, $team);
+        $this->assertInstanceOf(Organization::class, $organization);
 
-        $this->assertTrue($user->belongsToTeam($team));
-        $this->assertTrue($user->ownsTeam($team));
-        $this->assertCount(1, $user->fresh()->ownedTeams);
-        $this->assertCount(1, $user->fresh()->allTeams());
+        $this->assertTrue($user->belongsToOrganization($organization));
+        $this->assertTrue($user->ownsOrganization($organization));
+        $this->assertCount(1, $user->fresh()->ownedOrganizations);
+        $this->assertCount(1, $user->fresh()->allOrganizations());
 
-        $team->forceFill(['personal_team' => true])->save();
+        $organization->forceFill(['personal_organization' => true])->save();
 
-        $this->assertEquals($team->id, $user->fresh()->personalTeam()->id);
-        $this->assertEquals($team->id, $user->fresh()->currentTeam->id);
-        $this->assertTrue($user->hasTeamPermission($team, 'foo'));
+        $this->assertEquals($organization->id, $user->fresh()->personalOrganization()->id);
+        $this->assertEquals($organization->id, $user->fresh()->currentOrganization->id);
+        $this->assertTrue($user->hasOrganizationPermission($organization, 'foo'));
 
-        // Test with another user that isn't on the team...
+        // Test with another user that isn't on the organization...
         $otherUser = User::forceCreate([
             'name' => 'Adam Wathan',
             'email' => 'adam@laravel.com',
             'password' => 'secret',
         ]);
 
-        $this->assertFalse($otherUser->belongsToTeam($team));
-        $this->assertFalse($otherUser->ownsTeam($team));
-        $this->assertFalse($otherUser->hasTeamPermission($team, 'foo'));
+        $this->assertFalse($otherUser->belongsToOrganization($organization));
+        $this->assertFalse($otherUser->ownsOrganization($organization));
+        $this->assertFalse($otherUser->hasOrganizationPermission($organization, 'foo'));
 
-        // Add the other user to the team...
+        // Add the other user to the organization...
         Jetstream::role('editor', 'Editor', ['foo']);
 
-        $otherUser->teams()->attach($team, ['role' => 'editor']);
+        $otherUser->organizations()->attach($organization, ['role' => 'editor']);
         $otherUser = $otherUser->fresh();
 
-        $this->assertTrue($otherUser->belongsToTeam($team));
-        $this->assertFalse($otherUser->ownsTeam($team));
+        $this->assertTrue($otherUser->belongsToOrganization($organization));
+        $this->assertFalse($otherUser->ownsOrganization($organization));
 
-        $this->assertTrue($otherUser->hasTeamPermission($team, 'foo'));
-        $this->assertFalse($otherUser->hasTeamPermission($team, 'bar'));
+        $this->assertTrue($otherUser->hasOrganizationPermission($organization, 'foo'));
+        $this->assertFalse($otherUser->hasOrganizationPermission($organization, 'bar'));
 
-        $this->assertTrue($team->userHasPermission($otherUser, 'foo'));
-        $this->assertFalse($team->userHasPermission($otherUser, 'bar'));
+        $this->assertTrue($organization->userHasPermission($otherUser, 'foo'));
+        $this->assertFalse($organization->userHasPermission($otherUser, 'bar'));
 
         $otherUser->withAccessToken(new TransientToken);
 
-        $this->assertTrue($otherUser->belongsToTeam($team));
-        $this->assertFalse($otherUser->ownsTeam($team));
+        $this->assertTrue($otherUser->belongsToOrganization($organization));
+        $this->assertFalse($otherUser->ownsOrganization($organization));
 
-        $this->assertTrue($otherUser->hasTeamPermission($team, 'foo'));
-        $this->assertFalse($otherUser->hasTeamPermission($team, 'bar'));
+        $this->assertTrue($otherUser->hasOrganizationPermission($organization, 'foo'));
+        $this->assertFalse($otherUser->hasOrganizationPermission($organization, 'bar'));
 
-        $this->assertTrue($team->userHasPermission($otherUser, 'foo'));
-        $this->assertFalse($team->userHasPermission($otherUser, 'bar'));
+        $this->assertTrue($organization->userHasPermission($otherUser, 'foo'));
+        $this->assertFalse($organization->userHasPermission($otherUser, 'bar'));
     }
 
-    public function test_has_team_permission_checks_token_permissions()
+    public function test_has_organization_permission_checks_token_permissions()
     {
         Jetstream::role('admin', 'Administrator', ['foo']);
 
         $this->migrate();
 
-        $action = new CreateTeam;
+        $action = new CreateOrganization;
 
         $user = User::forceCreate([
             'name' => 'Taylor Otwell',
@@ -100,7 +100,7 @@ class TeamBehaviorTest extends OrchestraTestCase
             'password' => 'secret',
         ]);
 
-        $team = $action->create($user, ['name' => 'Test Team']);
+        $organization = $action->create($user, ['name' => 'Test Organization']);
 
         $adam = User::forceCreate([
             'name' => 'Adam Wathan',
@@ -111,9 +111,9 @@ class TeamBehaviorTest extends OrchestraTestCase
         $authToken = new Sanctum;
         $adam = $authToken->actingAs($adam, ['bar'], []);
 
-        $team->users()->attach($adam, ['role' => 'admin']);
+        $organization->users()->attach($adam, ['role' => 'admin']);
 
-        $this->assertFalse($adam->hasTeamPermission($team, 'foo'));
+        $this->assertFalse($adam->hasOrganizationPermission($organization, 'foo'));
 
         $john = User::forceCreate([
             'name' => 'John Doe',
@@ -124,16 +124,16 @@ class TeamBehaviorTest extends OrchestraTestCase
         $authToken = new Sanctum;
         $john = $authToken->actingAs($john, ['foo'], []);
 
-        $team->users()->attach($john, ['role' => 'admin']);
+        $organization->users()->attach($john, ['role' => 'admin']);
 
-        $this->assertTrue($john->hasTeamPermission($team, 'foo'));
+        $this->assertTrue($john->hasOrganizationPermission($organization, 'foo'));
     }
 
-    public function test_user_does_not_need_to_refresh_after_switching_teams()
+    public function test_user_does_not_need_to_refresh_after_switching_organizations()
     {
         $this->migrate();
 
-        $action = new CreateTeam;
+        $action = new CreateOrganization;
 
         $user = User::forceCreate([
             'name' => 'Taylor Otwell',
@@ -141,15 +141,15 @@ class TeamBehaviorTest extends OrchestraTestCase
             'password' => 'secret',
         ]);
 
-        $personalTeam = $action->create($user, ['name' => 'Personal Team']);
+        $personalOrganization = $action->create($user, ['name' => 'Personal Organization']);
 
-        $personalTeam->forceFill(['personal_team' => true])->save();
+        $personalOrganization->forceFill(['personal_organization' => true])->save();
 
-        $this->assertTrue($user->isCurrentTeam($personalTeam));
+        $this->assertTrue($user->isCurrentOrganization($personalOrganization));
 
-        $anotherTeam = $action->create($user, ['name' => 'Test Team']);
+        $anotherOrganization = $action->create($user, ['name' => 'Test Organization']);
 
-        $this->assertTrue($user->isCurrentTeam($anotherTeam));
+        $this->assertTrue($user->isCurrentOrganization($anotherOrganization));
     }
 
     protected function migrate()

@@ -2,48 +2,48 @@
 
 namespace Laravel\Jetstream\Tests;
 
-use App\Actions\Jetstream\CreateTeam;
-use App\Models\Team;
+use App\Actions\Jetstream\CreateOrganization;
+use App\Models\Organization;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
-use Laravel\Jetstream\Contracts\AddsTeamMembers;
+use Laravel\Jetstream\Contracts\AddsOrganizationMembers;
 use Laravel\Jetstream\Jetstream;
-use Laravel\Jetstream\Tests\Fixtures\TeamPolicy;
+use Laravel\Jetstream\Tests\Fixtures\OrganizationPolicy;
 use Laravel\Jetstream\Tests\Fixtures\User;
 
-class TeamInvitationControllerTest extends OrchestraTestCase
+class OrganizationInvitationControllerTest extends OrchestraTestCase
 {
     public function setUp(): void
     {
         parent::setUp();
 
-        Gate::policy(Team::class, TeamPolicy::class);
+        Gate::policy(Organization::class, OrganizationPolicy::class);
         Jetstream::useUserModel(User::class);
     }
 
-    public function test_team_invitations_can_be_accepted()
+    public function test_organization_invitations_can_be_accepted()
     {
-        $this->mock(AddsTeamMembers::class)->shouldReceive('add')->once();
+        $this->mock(AddsOrganizationMembers::class)->shouldReceive('add')->once();
 
         Jetstream::role('admin', 'Admin', ['foo', 'bar']);
         Jetstream::role('editor', 'Editor', ['baz', 'qux']);
 
         $this->migrate();
 
-        $team = $this->createTeam();
+        $organization = $this->createOrganization();
 
-        $invitation = $team->teamInvitations()->create(['email' => 'adam@laravel.com', 'role' => 'admin']);
+        $invitation = $organization->organizationInvitations()->create(['email' => 'adam@laravel.com', 'role' => 'admin']);
 
-        $url = URL::signedRoute('team-invitations.accept', ['invitation' => $invitation]);
+        $url = URL::signedRoute('organization-invitations.accept', ['invitation' => $invitation]);
 
-        $response = $this->actingAs($team->owner)->get($url);
+        $response = $this->actingAs($organization->owner)->get($url);
 
         $response->assertRedirect();
     }
 
-    protected function createTeam()
+    protected function createOrganization()
     {
-        $action = new CreateTeam;
+        $action = new CreateOrganization;
 
         $user = User::forceCreate([
             'name' => 'Taylor Otwell',
@@ -51,7 +51,7 @@ class TeamInvitationControllerTest extends OrchestraTestCase
             'password' => 'secret',
         ]);
 
-        return $action->create($user, ['name' => 'Test Team']);
+        return $action->create($user, ['name' => 'Test Organization']);
     }
 
     protected function migrate()
@@ -64,6 +64,6 @@ class TeamInvitationControllerTest extends OrchestraTestCase
         parent::getEnvironmentSetUp($app);
 
         $app['config']->set('jetstream.stack', 'inertia');
-        $app['config']->set('jetstream.features', ['teams']);
+        $app['config']->set('jetstream.features', ['organizations']);
     }
 }

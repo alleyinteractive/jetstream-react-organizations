@@ -4,14 +4,14 @@ namespace App\Actions\Jetstream;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
-use Laravel\Jetstream\Contracts\CreatesTeams;
-use Laravel\Jetstream\Events\AddingTeam;
+use Laravel\Jetstream\Contracts\CreatesOrganizations;
+use Laravel\Jetstream\Events\AddingOrganization;
 use Laravel\Jetstream\Jetstream;
 
-class CreateTeam implements CreatesTeams
+class CreateOrganization implements CreatesOrganizations
 {
     /**
-     * Validate and create a new team for the given user.
+     * Validate and create a new organization for the given user.
      *
      * @param  mixed  $user
      * @param  array  $input
@@ -19,19 +19,19 @@ class CreateTeam implements CreatesTeams
      */
     public function create($user, array $input)
     {
-        Gate::forUser($user)->authorize('create', Jetstream::newTeamModel());
+        Gate::forUser($user)->authorize('create', Jetstream::newOrganizationModel());
 
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
-        ])->validateWithBag('createTeam');
+        ])->validateWithBag('createOrganization');
 
-        AddingTeam::dispatch($user);
+        AddingOrganization::dispatch($user);
 
-        $user->switchTeam($team = $user->ownedTeams()->create([
+        $user->switchOrganization($organization = $user->ownedOrganizations()->create([
             'name' => $input['name'],
-            'personal_team' => false,
+            'personal_organization' => false,
         ]));
 
-        return $team;
+        return $organization;
     }
 }

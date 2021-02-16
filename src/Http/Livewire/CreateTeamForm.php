@@ -3,11 +3,11 @@
 namespace Laravel\Jetstream\Http\Livewire;
 
 use Illuminate\Support\Facades\Auth;
-use Laravel\Jetstream\Contracts\CreatesTeams;
+use Laravel\Jetstream\Contracts\CreatesOrganizations;
 use Laravel\Jetstream\RedirectsActions;
 use Livewire\Component;
 
-class CreateTeamForm extends Component
+class CreateOrganizationForm extends Component
 {
     use RedirectsActions;
 
@@ -19,12 +19,12 @@ class CreateTeamForm extends Component
     public $state = [];
 
     /**
-     * Create a new team.
+     * Create a new organization.
      *
-     * @param  \Laravel\Jetstream\Contracts\CreatesTeams  $creator
+     * @param  \Laravel\Jetstream\Contracts\CreatesOrganizations  $creator
      * @return void
      */
-    public function createTeam(CreatesTeams $creator)
+    public function createOrganization(CreatesOrganizations $creator)
     {
         $this->resetErrorBag();
 
@@ -50,6 +50,6 @@ class CreateTeamForm extends Component
      */
     public function render()
     {
-        return view('teams.create-team-form');
+        return view('organizations.create-organization-form');
     }
 }

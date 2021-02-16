@@ -4,50 +4,50 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Jetstream\Http\Livewire\TeamMemberManager;
+use Laravel\Jetstream\Http\Livewire\OrganizationMemberManager;
 use Livewire\Livewire;
 use Tests\TestCase;
 
-class UpdateTeamMemberRoleTest extends TestCase
+class UpdateOrganizationMemberRoleTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_team_member_roles_can_be_updated()
+    public function test_organization_member_roles_can_be_updated()
     {
-        $this->actingAs($user = User::factory()->withPersonalTeam()->create());
+        $this->actingAs($user = User::factory()->withPersonalOrganization()->create());
 
-        $user->currentTeam->users()->attach(
+        $user->currentOrganization->users()->attach(
             $otherUser = User::factory()->create(), ['role' => 'admin']
         );
 
-        $component = Livewire::test(TeamMemberManager::class, ['team' => $user->currentTeam])
+        $component = Livewire::test(OrganizationMemberManager::class, ['organization' => $user->currentOrganization])
                         ->set('managingRoleFor', $otherUser)
                         ->set('currentRole', 'editor')
                         ->call('updateRole');
 
-        $this->assertTrue($otherUser->fresh()->hasTeamRole(
-            $user->currentTeam->fresh(), 'editor'
+        $this->assertTrue($otherUser->fresh()->hasOrganizationRole(
+            $user->currentOrganization->fresh(), 'editor'
         ));
     }
 
-    public function test_only_team_owner_can_update_team_member_roles()
+    public function test_only_organization_owner_can_update_organization_member_roles()
     {
-        $user = User::factory()->withPersonalTeam()->create();
+        $user = User::factory()->withPersonalOrganization()->create();
 
-        $user->currentTeam->users()->attach(
+        $user->currentOrganization->users()->attach(
             $otherUser = User::factory()->create(), ['role' => 'admin']
         );
 
         $this->actingAs($otherUser);
 
-        $component = Livewire::test(TeamMemberManager::class, ['team' => $user->currentTeam])
+        $component = Livewire::test(OrganizationMemberManager::class, ['organization' => $user->currentOrganization])
                         ->set('managingRoleFor', $otherUser)
                         ->set('currentRole', 'editor')
                         ->call('updateRole')
                         ->assertStatus(403);
 
-        $this->assertTrue($otherUser->fresh()->hasTeamRole(
-            $user->currentTeam->fresh(), 'admin'
+        $this->assertTrue($otherUser->fresh()->hasOrganizationRole(
+            $user->currentOrganization->fresh(), 'admin'
         ));
     }
 }

@@ -13,16 +13,16 @@ use Illuminate\View\Compilers\BladeCompiler;
 use Inertia\Inertia;
 use Laravel\Fortify\Fortify;
 use Laravel\Jetstream\Http\Livewire\ApiTokenManager;
-use Laravel\Jetstream\Http\Livewire\CreateTeamForm;
-use Laravel\Jetstream\Http\Livewire\DeleteTeamForm;
+use Laravel\Jetstream\Http\Livewire\CreateOrganizationForm;
+use Laravel\Jetstream\Http\Livewire\DeleteOrganizationForm;
 use Laravel\Jetstream\Http\Livewire\DeleteUserForm;
 use Laravel\Jetstream\Http\Livewire\LogoutOtherBrowserSessionsForm;
 use Laravel\Jetstream\Http\Livewire\NavigationMenu;
-use Laravel\Jetstream\Http\Livewire\TeamMemberManager;
+use Laravel\Jetstream\Http\Livewire\OrganizationMemberManager;
 use Laravel\Jetstream\Http\Livewire\TwoFactorAuthenticationForm;
 use Laravel\Jetstream\Http\Livewire\UpdatePasswordForm;
 use Laravel\Jetstream\Http\Livewire\UpdateProfileInformationForm;
-use Laravel\Jetstream\Http\Livewire\UpdateTeamNameForm;
+use Laravel\Jetstream\Http\Livewire\UpdateOrganizationNameForm;
 use Laravel\Jetstream\Http\Middleware\ShareInertiaData;
 use Livewire\Livewire;
 
@@ -50,11 +50,11 @@ class JetstreamServiceProvider extends ServiceProvider
                     Livewire::component('api.api-token-manager', ApiTokenManager::class);
                 }
 
-                if (Features::hasTeamFeatures()) {
-                    Livewire::component('teams.create-team-form', CreateTeamForm::class);
-                    Livewire::component('teams.update-team-name-form', UpdateTeamNameForm::class);
-                    Livewire::component('teams.team-member-manager', TeamMemberManager::class);
-                    Livewire::component('teams.delete-team-form', DeleteTeamForm::class);
+                if (Features::hasOrganizationFeatures()) {
+                    Livewire::component('organizations.create-organization-form', CreateOrganizationForm::class);
+                    Livewire::component('organizations.update-organization-name-form', UpdateOrganizationNameForm::class);
+                    Livewire::component('organizations.organization-member-manager', OrganizationMemberManager::class);
+                    Livewire::component('organizations.delete-organization-form', DeleteOrganizationForm::class);
                 }
             }
         });
@@ -125,11 +125,11 @@ class JetstreamServiceProvider extends ServiceProvider
             $this->registerComponent('modal');
             $this->registerComponent('nav-link');
             $this->registerComponent('responsive-nav-link');
-            $this->registerComponent('responsive-switchable-team');
+            $this->registerComponent('responsive-switchable-organization');
             $this->registerComponent('secondary-button');
             $this->registerComponent('section-border');
             $this->registerComponent('section-title');
-            $this->registerComponent('switchable-team');
+            $this->registerComponent('switchable-organization');
             $this->registerComponent('validation-errors');
             $this->registerComponent('welcome');
         });
@@ -170,10 +170,10 @@ class JetstreamServiceProvider extends ServiceProvider
         ], 'jetstream-migrations');
 
         $this->publishes([
-            __DIR__.'/../database/migrations/2020_05_21_100000_create_teams_table.php' => database_path('migrations/2020_05_21_100000_create_teams_table.php'),
-            __DIR__.'/../database/migrations/2020_05_21_200000_create_team_user_table.php' => database_path('migrations/2020_05_21_200000_create_team_user_table.php'),
-            __DIR__.'/../database/migrations/2020_05_21_300000_create_team_invitations_table.php' => database_path('migrations/2020_05_21_300000_create_team_invitations_table.php'),
-        ], 'jetstream-team-migrations');
+            __DIR__.'/../database/migrations/2020_05_21_100000_create_organizations_table.php' => database_path('migrations/2020_05_21_100000_create_organizations_table.php'),
+            __DIR__.'/../database/migrations/2020_05_21_200000_create_organization_user_table.php' => database_path('migrations/2020_05_21_200000_create_organization_user_table.php'),
+            __DIR__.'/../database/migrations/2020_05_21_300000_create_organization_invitations_table.php' => database_path('migrations/2020_05_21_300000_create_organization_invitations_table.php'),
+        ], 'jetstream-organization-migrations');
 
         $this->publishes([
             __DIR__.'/../routes/'.config('jetstream.stack').'.php' => base_path('routes/jetstream.php'),

@@ -6,70 +6,70 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Laravel\Jetstream\Contracts\InvitesTeamMembers;
-use Laravel\Jetstream\Events\InvitingTeamMember;
+use Laravel\Jetstream\Contracts\InvitesOrganizationMembers;
+use Laravel\Jetstream\Events\InvitingOrganizationMember;
 use Laravel\Jetstream\Jetstream;
-use Laravel\Jetstream\Mail\TeamInvitation;
+use Laravel\Jetstream\Mail\OrganizationInvitation;
 use Laravel\Jetstream\Rules\Role;
 
-class InviteTeamMember implements InvitesTeamMembers
+class InviteOrganizationMember implements InvitesOrganizationMembers
 {
     /**
-     * Invite a new team member to the given team.
+     * Invite a new organization member to the given organization.
      *
      * @param  mixed  $user
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @param  string  $email
      * @param  string|null  $role
      * @return void
      */
-    public function invite($user, $team, string $email, string $role = null)
+    public function invite($user, $organization, string $email, string $role = null)
     {
-        Gate::forUser($user)->authorize('addTeamMember', $team);
+        Gate::forUser($user)->authorize('addOrganizationMember', $organization);
 
-        $this->validate($team, $email, $role);
+        $this->validate($organization, $email, $role);
 
-        InvitingTeamMember::dispatch($team, $email, $role);
+        InvitingOrganizationMember::dispatch($organization, $email, $role);
 
-        $invitation = $team->teamInvitations()->create([
+        $invitation = $organization->organizationInvitations()->create([
             'email' => $email,
             'role' => $role,
         ]);
 
-        Mail::to($email)->send(new TeamInvitation($invitation));
+        Mail::to($email)->send(new OrganizationInvitation($invitation));
     }
 
     /**
      * Validate the invite member operation.
      *
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @param  string  $email
      * @param  string|null  $role
      * @return void
      */
-    protected function validate($team, string $email, ?string $role)
+    protected function validate($organization, string $email, ?string $role)
     {
         Validator::make([
             'email' => $email,
             'role' => $role,
-        ], $this->rules($team), [
-            'email.unique' => __('This user has already been invited to the team.'),
+        ], $this->rules($organization), [
+            'email.unique' => __('This user has already been invited to the organization.'),
         ])->after(
-            $this->ensureUserIsNotAlreadyOnTeam($team, $email)
-        )->validateWithBag('addTeamMember');
+            $this->ensureUserIsNotAlreadyOnOrganization($organization, $email)
+        )->validateWithBag('addOrganizationMember');
     }
 
     /**
-     * Get the validation rules for inviting a team member.
+     * Get the validation rules for inviting a organization member.
      *
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @return array
      */
-    protected function rules($team)
+    protected function rules($organization)
     {
         return array_filter([
-            'email' => ['required', 'email', Rule::unique('team_invitations')->where(function ($query) use ($team) {
-                $query->where('team_id', $team->id);
+            'email' => ['required', 'email', Rule::unique('organization_invitations')->where(function ($query) use ($organization) {
+                $query->where('organization_id', $organization->id);
             })],
             'role' => Jetstream::hasRoles()
                             ? ['required', 'string', new Role]
@@ -78,19 +78,19 @@ class InviteTeamMember implements InvitesTeamMembers
     }
 
     /**
-     * Ensure that the user is not already on the team.
+     * Ensure that the user is not already on the organization.
      *
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @param  string  $email
      * @return \Closure
      */
-    protected function ensureUserIsNotAlreadyOnTeam($team, string $email)
+    protected function ensureUserIsNotAlreadyOnOrganization($organization, string $email)
     {
-        return function ($validator) use ($team, $email) {
+        return function ($validator) use ($organization, $email) {
             $validator->errors()->addIf(
-                $team->hasUserWithEmail($email),
+                $organization->hasUserWithEmail($email),
                 'email',
-                __('This user already belongs to the team.')
+                __('This user already belongs to the organization.')
             );
         };
     }

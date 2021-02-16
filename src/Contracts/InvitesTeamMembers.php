@@ -2,15 +2,15 @@
 
 namespace Laravel\Jetstream\Contracts;
 
-interface InvitesTeamMembers
+interface InvitesOrganizationMembers
 {
     /**
-     * Invite a new team member to the given team.
+     * Invite a new organization member to the given organization.
      *
      * @param  mixed  $user
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @param  string  $email
      * @return void
      */
-    public function invite($user, $team, string $email, string $role = null);
+    public function invite($user, $organization, string $email, string $role = null);
 }

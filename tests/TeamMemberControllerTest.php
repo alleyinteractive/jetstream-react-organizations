@@ -2,32 +2,32 @@
 
 namespace Laravel\Jetstream\Tests;
 
-use App\Actions\Jetstream\CreateTeam;
-use App\Models\Team;
+use App\Actions\Jetstream\CreateOrganization;
+use App\Models\Organization;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Jetstream\Jetstream;
-use Laravel\Jetstream\Tests\Fixtures\TeamPolicy;
+use Laravel\Jetstream\Tests\Fixtures\OrganizationPolicy;
 use Laravel\Jetstream\Tests\Fixtures\User;
 use Laravel\Sanctum\TransientToken;
 
-class TeamMemberControllerTest extends OrchestraTestCase
+class OrganizationMemberControllerTest extends OrchestraTestCase
 {
     public function setUp(): void
     {
         parent::setUp();
 
-        Gate::policy(Team::class, TeamPolicy::class);
+        Gate::policy(Organization::class, OrganizationPolicy::class);
         Jetstream::useUserModel(User::class);
     }
 
-    public function test_team_member_permissions_can_be_updated()
+    public function test_organization_member_permissions_can_be_updated()
     {
         Jetstream::role('admin', 'Admin', ['foo', 'bar']);
         Jetstream::role('editor', 'Editor', ['baz', 'qux']);
 
         $this->migrate();
 
-        $team = $this->createTeam();
+        $organization = $this->createOrganization();
 
         $adam = User::forceCreate([
             'name' => 'Adam Wathan',
@@ -35,9 +35,9 @@ class TeamMemberControllerTest extends OrchestraTestCase
             'password' => 'secret',
         ]);
 
-        $team->users()->attach($adam, ['role' => 'admin']);
+        $organization->users()->attach($adam, ['role' => 'admin']);
 
-        $response = $this->actingAs($team->owner)->put('/teams/'.$team->id.'/members/'.$adam->id, [
+        $response = $this->actingAs($organization->owner)->put('/organizations/'.$organization->id.'/members/'.$adam->id, [
             'role' => 'editor',
         ]);
 
@@ -47,15 +47,15 @@ class TeamMemberControllerTest extends OrchestraTestCase
 
         $adam->withAccessToken(new TransientToken);
 
-        $this->assertTrue($adam->hasTeamPermission($team, 'baz'));
-        $this->assertTrue($adam->hasTeamPermission($team, 'qux'));
+        $this->assertTrue($adam->hasOrganizationPermission($organization, 'baz'));
+        $this->assertTrue($adam->hasOrganizationPermission($organization, 'qux'));
     }
 
-    public function test_team_member_permissions_cant_be_updated_if_not_authorized()
+    public function test_organization_member_permissions_cant_be_updated_if_not_authorized()
     {
         $this->migrate();
 
-        $team = $this->createTeam();
+        $organization = $this->createOrganization();
 
         $adam = User::forceCreate([
             'name' => 'Adam Wathan',
@@ -63,18 +63,18 @@ class TeamMemberControllerTest extends OrchestraTestCase
             'password' => 'secret',
         ]);
 
-        $team->users()->attach($adam, ['role' => 'admin']);
+        $organization->users()->attach($adam, ['role' => 'admin']);
 
-        $response = $this->actingAs($adam)->put('/teams/'.$team->id.'/members/'.$adam->id, [
+        $response = $this->actingAs($adam)->put('/organizations/'.$organization->id.'/members/'.$adam->id, [
             'role' => 'admin',
         ]);
 
         $response->assertStatus(403);
     }
 
-    protected function createTeam()
+    protected function createOrganization()
     {
-        $action = new CreateTeam;
+        $action = new CreateOrganization;
 
         $user = User::forceCreate([
             'name' => 'Taylor Otwell',
@@ -82,7 +82,7 @@ class TeamMemberControllerTest extends OrchestraTestCase
             'password' => 'secret',
         ]);
 
-        return $action->create($user, ['name' => 'Test Team']);
+        return $action->create($user, ['name' => 'Test Organization']);
     }
 
     protected function migrate()
@@ -95,6 +95,6 @@ class TeamMemberControllerTest extends OrchestraTestCase
         parent::getEnvironmentSetUp($app);
 
         $app['config']->set('jetstream.stack', 'inertia');
-        $app['config']->set('jetstream.features', ['teams']);
+        $app['config']->set('jetstream.features', ['organizations']);
     }
 }

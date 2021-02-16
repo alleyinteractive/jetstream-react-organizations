@@ -5,23 +5,23 @@ namespace Laravel\Jetstream\Actions;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
-class ValidateTeamDeletion
+class ValidateOrganizationDeletion
 {
     /**
-     * Validate that the team can be deleted by the given user.
+     * Validate that the organization can be deleted by the given user.
      *
      * @param  mixed  $user
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @return void
      */
-    public function validate($user, $team)
+    public function validate($user, $organization)
     {
-        Gate::forUser($user)->authorize('delete', $team);
+        Gate::forUser($user)->authorize('delete', $organization);
 
-        if ($team->personal_team) {
+        if ($organization->personal_organization) {
             throw ValidationException::withMessages([
-                'team' => __('You may not delete your personal team.'),
-            ])->errorBag('deleteTeam');
+                'organization' => __('You may not delete your personal organization.'),
+            ])->errorBag('deleteOrganization');
         }
     }
 }

@@ -5,59 +5,59 @@ namespace App\Actions\Jetstream;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
-use Laravel\Jetstream\Contracts\RemovesTeamMembers;
-use Laravel\Jetstream\Events\TeamMemberRemoved;
+use Laravel\Jetstream\Contracts\RemovesOrganizationMembers;
+use Laravel\Jetstream\Events\OrganizationMemberRemoved;
 
-class RemoveTeamMember implements RemovesTeamMembers
+class RemoveOrganizationMember implements RemovesOrganizationMembers
 {
     /**
-     * Remove the team member from the given team.
+     * Remove the organization member from the given organization.
      *
      * @param  mixed  $user
-     * @param  mixed  $team
-     * @param  mixed  $teamMember
+     * @param  mixed  $organization
+     * @param  mixed  $organizationMember
      * @return void
      */
-    public function remove($user, $team, $teamMember)
+    public function remove($user, $organization, $organizationMember)
     {
-        $this->authorize($user, $team, $teamMember);
+        $this->authorize($user, $organization, $organizationMember);
 
-        $this->ensureUserDoesNotOwnTeam($teamMember, $team);
+        $this->ensureUserDoesNotOwnOrganization($organizationMember, $organization);
 
-        $team->removeUser($teamMember);
+        $organization->removeUser($organizationMember);
 
-        TeamMemberRemoved::dispatch($team, $teamMember);
+        OrganizationMemberRemoved::dispatch($organization, $organizationMember);
     }
 
     /**
-     * Authorize that the user can remove the team member.
+     * Authorize that the user can remove the organization member.
      *
      * @param  mixed  $user
-     * @param  mixed  $team
-     * @param  mixed  $teamMember
+     * @param  mixed  $organization
+     * @param  mixed  $organizationMember
      * @return void
      */
-    protected function authorize($user, $team, $teamMember)
+    protected function authorize($user, $organization, $organizationMember)
     {
-        if (! Gate::forUser($user)->check('removeTeamMember', $team) &&
-            $user->id !== $teamMember->id) {
+        if (! Gate::forUser($user)->check('removeOrganizationMember', $organization) &&
+            $user->id !== $organizationMember->id) {
             throw new AuthorizationException;
         }
     }
 
     /**
-     * Ensure that the currently authenticated user does not own the team.
+     * Ensure that the currently authenticated user does not own the organization.
      *
-     * @param  mixed  $teamMember
-     * @param  mixed  $team
+     * @param  mixed  $organizationMember
+     * @param  mixed  $organization
      * @return void
      */
-    protected function ensureUserDoesNotOwnTeam($teamMember, $team)
+    protected function ensureUserDoesNotOwnOrganization($organizationMember, $organization)
     {
-        if ($teamMember->id === $team->owner->id) {
+        if ($organizationMember->id === $organization->owner->id) {
             throw ValidationException::withMessages([
-                'team' => [__('You may not leave a team that you created.')],
-            ])->errorBag('removeTeamMember');
+                'organization' => [__('You may not leave a organization that you created.')],
+            ])->errorBag('removeOrganizationMember');
         }
     }
 }

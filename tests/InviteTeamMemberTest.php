@@ -2,28 +2,28 @@
 
 namespace Laravel\Jetstream\Tests;
 
-use App\Actions\Jetstream\CreateTeam;
-use App\Actions\Jetstream\InviteTeamMember;
-use App\Models\Team;
+use App\Actions\Jetstream\CreateOrganization;
+use App\Actions\Jetstream\InviteOrganizationMember;
+use App\Models\Organization;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 use Laravel\Jetstream\Jetstream;
-use Laravel\Jetstream\Tests\Fixtures\TeamPolicy;
+use Laravel\Jetstream\Tests\Fixtures\OrganizationPolicy;
 use Laravel\Jetstream\Tests\Fixtures\User;
 
-class InviteTeamMemberTest extends OrchestraTestCase
+class InviteOrganizationMemberTest extends OrchestraTestCase
 {
     public function setUp(): void
     {
         parent::setUp();
 
-        Gate::policy(Team::class, TeamPolicy::class);
+        Gate::policy(Organization::class, OrganizationPolicy::class);
 
         Jetstream::useUserModel(User::class);
     }
 
-    public function test_team_members_can_be_invited()
+    public function test_organization_members_can_be_invited()
     {
         Mail::fake();
 
@@ -31,7 +31,7 @@ class InviteTeamMemberTest extends OrchestraTestCase
 
         $this->migrate();
 
-        $team = $this->createTeam();
+        $organization = $this->createOrganization();
 
         $otherUser = User::forceCreate([
             'name' => 'Adam Wathan',
@@ -39,19 +39,19 @@ class InviteTeamMemberTest extends OrchestraTestCase
             'password' => 'secret',
         ]);
 
-        $action = new InviteTeamMember;
+        $action = new InviteOrganizationMember;
 
-        $action->invite($team->owner, $team, 'adam@laravel.com', 'admin');
+        $action->invite($organization->owner, $organization, 'adam@laravel.com', 'admin');
 
-        $team = $team->fresh();
+        $organization = $organization->fresh();
 
-        $this->assertCount(0, $team->users);
-        $this->assertCount(1, $team->teamInvitations);
-        $this->assertEquals('adam@laravel.com', $team->teamInvitations->first()->email);
-        $this->assertEquals($team->id, $team->teamInvitations->first()->team->id);
+        $this->assertCount(0, $organization->users);
+        $this->assertCount(1, $organization->organizationInvitations);
+        $this->assertEquals('adam@laravel.com', $organization->organizationInvitations->first()->email);
+        $this->assertEquals($organization->id, $organization->organizationInvitations->first()->organization->id);
     }
 
-    public function test_user_cant_already_be_on_team()
+    public function test_user_cant_already_be_on_organization()
     {
         Mail::fake();
 
@@ -59,7 +59,7 @@ class InviteTeamMemberTest extends OrchestraTestCase
 
         $this->migrate();
 
-        $team = $this->createTeam();
+        $organization = $this->createOrganization();
 
         $otherUser = User::forceCreate([
             'name' => 'Adam Wathan',
@@ -67,16 +67,16 @@ class InviteTeamMemberTest extends OrchestraTestCase
             'password' => 'secret',
         ]);
 
-        $action = new InviteTeamMember;
+        $action = new InviteOrganizationMember;
 
-        $action->invite($team->owner, $team, 'adam@laravel.com', 'admin');
+        $action->invite($organization->owner, $organization, 'adam@laravel.com', 'admin');
         $this->assertTrue(true);
-        $action->invite($team->owner, $team->fresh(), 'adam@laravel.com', 'admin');
+        $action->invite($organization->owner, $organization->fresh(), 'adam@laravel.com', 'admin');
     }
 
-    protected function createTeam()
+    protected function createOrganization()
     {
-        $action = new CreateTeam;
+        $action = new CreateOrganization;
 
         $user = User::forceCreate([
             'name' => 'Taylor Otwell',
@@ -84,7 +84,7 @@ class InviteTeamMemberTest extends OrchestraTestCase
             'password' => 'secret',
         ]);
 
-        return $action->create($user, ['name' => 'Test Team']);
+        return $action->create($user, ['name' => 'Test Organization']);
     }
 
     protected function migrate()

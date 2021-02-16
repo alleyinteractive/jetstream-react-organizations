@@ -3,17 +3,17 @@
 namespace Laravel\Jetstream\Http\Livewire;
 
 use Illuminate\Support\Facades\Auth;
-use Laravel\Jetstream\Contracts\UpdatesTeamNames;
+use Laravel\Jetstream\Contracts\UpdatesOrganizationNames;
 use Livewire\Component;
 
-class UpdateTeamNameForm extends Component
+class UpdateOrganizationNameForm extends Component
 {
     /**
-     * The team instance.
+     * The organization instance.
      *
      * @var mixed
      */
-    public $team;
+    public $organization;
 
     /**
      * The component's state.
@@ -25,27 +25,27 @@ class UpdateTeamNameForm extends Component
     /**
      * Mount the component.
      *
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @return void
      */
-    public function mount($team)
+    public function mount($organization)
     {
-        $this->team = $team;
+        $this->organization = $organization;
 
-        $this->state = $team->withoutRelations()->toArray();
+        $this->state = $organization->withoutRelations()->toArray();
     }
 
     /**
-     * Update the team's name.
+     * Update the organization's name.
      *
-     * @param  \Laravel\Jetstream\Contracts\UpdatesTeamNames  $updater
+     * @param  \Laravel\Jetstream\Contracts\UpdatesOrganizationNames  $updater
      * @return void
      */
-    public function updateTeamName(UpdatesTeamNames $updater)
+    public function updateOrganizationName(UpdatesOrganizationNames $updater)
     {
         $this->resetErrorBag();
 
-        $updater->update($this->user, $this->team, $this->state);
+        $updater->update($this->user, $this->organization, $this->state);
 
         $this->emit('saved');
 
@@ -69,6 +69,6 @@ class UpdateTeamNameForm extends Component
      */
     public function render()
     {
-        return view('teams.update-team-name-form');
+        return view('organizations.update-organization-name-form');
     }
 }

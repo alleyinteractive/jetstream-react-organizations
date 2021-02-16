@@ -6,66 +6,66 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
-use Laravel\Jetstream\Actions\ValidateTeamDeletion;
-use Laravel\Jetstream\Contracts\CreatesTeams;
-use Laravel\Jetstream\Contracts\DeletesTeams;
-use Laravel\Jetstream\Contracts\UpdatesTeamNames;
+use Laravel\Jetstream\Actions\ValidateOrganizationDeletion;
+use Laravel\Jetstream\Contracts\CreatesOrganizations;
+use Laravel\Jetstream\Contracts\DeletesOrganizations;
+use Laravel\Jetstream\Contracts\UpdatesOrganizationNames;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Jetstream\RedirectsActions;
 
-class TeamController extends Controller
+class OrganizationController extends Controller
 {
     use RedirectsActions;
 
     /**
-     * Show the team management screen.
+     * Show the organization management screen.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $teamId
+     * @param  int  $organizationId
      * @return \Inertia\Response
      */
-    public function show(Request $request, $teamId)
+    public function show(Request $request, $organizationId)
     {
-        $team = Jetstream::newTeamModel()->findOrFail($teamId);
+        $organization = Jetstream::newOrganizationModel()->findOrFail($organizationId);
 
-        Gate::authorize('view', $team);
+        Gate::authorize('view', $organization);
 
-        return Jetstream::inertia()->render($request, 'Teams/Show', [
-            'team' => $team->load('owner', 'users', 'teamInvitations'),
+        return Jetstream::inertia()->render($request, 'Organizations/Show', [
+            'organization' => $organization->load('owner', 'users', 'organizationInvitations'),
             'availableRoles' => array_values(Jetstream::$roles),
             'availablePermissions' => Jetstream::$permissions,
             'defaultPermissions' => Jetstream::$defaultPermissions,
             'permissions' => [
-                'canAddTeamMembers' => Gate::check('addTeamMember', $team),
-                'canDeleteTeam' => Gate::check('delete', $team),
-                'canRemoveTeamMembers' => Gate::check('removeTeamMember', $team),
-                'canUpdateTeam' => Gate::check('update', $team),
+                'canAddOrganizationMembers' => Gate::check('addOrganizationMember', $organization),
+                'canDeleteOrganization' => Gate::check('delete', $organization),
+                'canRemoveOrganizationMembers' => Gate::check('removeOrganizationMember', $organization),
+                'canUpdateOrganization' => Gate::check('update', $organization),
             ],
         ]);
     }
 
     /**
-     * Show the team creation screen.
+     * Show the organization creation screen.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Inertia\Response
      */
     public function create(Request $request)
     {
-        Gate::authorize('create', Jetstream::newTeamModel());
+        Gate::authorize('create', Jetstream::newOrganizationModel());
 
-        return Inertia::render('Teams/Create');
+        return Inertia::render('Organizations/Create');
     }
 
     /**
-     * Create a new team.
+     * Create a new organization.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
-        $creator = app(CreatesTeams::class);
+        $creator = app(CreatesOrganizations::class);
 
         $creator->create($request->user(), $request->all());
 
@@ -73,37 +73,37 @@ class TeamController extends Controller
     }
 
     /**
-     * Update the given team's name.
+     * Update the given organization's name.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $teamId
+     * @param  int  $organizationId
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $teamId)
+    public function update(Request $request, $organizationId)
     {
-        $team = Jetstream::newTeamModel()->findOrFail($teamId);
+        $organization = Jetstream::newOrganizationModel()->findOrFail($organizationId);
 
-        app(UpdatesTeamNames::class)->update($request->user(), $team, $request->all());
+        app(UpdatesOrganizationNames::class)->update($request->user(), $organization, $request->all());
 
         return back(303);
     }
 
     /**
-     * Delete the given team.
+     * Delete the given organization.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $teamId
+     * @param  int  $organizationId
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Request $request, $teamId)
+    public function destroy(Request $request, $organizationId)
     {
-        $team = Jetstream::newTeamModel()->findOrFail($teamId);
+        $organization = Jetstream::newOrganizationModel()->findOrFail($organizationId);
 
-        app(ValidateTeamDeletion::class)->validate($request->user(), $team);
+        app(ValidateOrganizationDeletion::class)->validate($request->user(), $organization);
 
-        $deleter = app(DeletesTeams::class);
+        $deleter = app(DeletesOrganizations::class);
 
-        $deleter->delete($team);
+        $deleter->delete($organization);
 
         return $this->redirectPath($deleter);
     }

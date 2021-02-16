@@ -3,52 +3,52 @@
 namespace Laravel\Jetstream\Http\Livewire;
 
 use Illuminate\Support\Facades\Auth;
-use Laravel\Jetstream\Actions\ValidateTeamDeletion;
-use Laravel\Jetstream\Contracts\DeletesTeams;
+use Laravel\Jetstream\Actions\ValidateOrganizationDeletion;
+use Laravel\Jetstream\Contracts\DeletesOrganizations;
 use Laravel\Jetstream\RedirectsActions;
 use Livewire\Component;
 
-class DeleteTeamForm extends Component
+class DeleteOrganizationForm extends Component
 {
     use RedirectsActions;
 
     /**
-     * The team instance.
+     * The organization instance.
      *
      * @var mixed
      */
-    public $team;
+    public $organization;
 
     /**
-     * Indicates if team deletion is being confirmed.
+     * Indicates if organization deletion is being confirmed.
      *
      * @var bool
      */
-    public $confirmingTeamDeletion = false;
+    public $confirmingOrganizationDeletion = false;
 
     /**
      * Mount the component.
      *
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @return void
      */
-    public function mount($team)
+    public function mount($organization)
     {
-        $this->team = $team;
+        $this->organization = $organization;
     }
 
     /**
-     * Delete the team.
+     * Delete the organization.
      *
-     * @param  \Laravel\Jetstream\Actions\ValidateTeamDeletion  $validator
-     * @param  \Laravel\Jetstream\Contracts\DeletesTeams  $deleter
+     * @param  \Laravel\Jetstream\Actions\ValidateOrganizationDeletion  $validator
+     * @param  \Laravel\Jetstream\Contracts\DeletesOrganizations  $deleter
      * @return void
      */
-    public function deleteTeam(ValidateTeamDeletion $validator, DeletesTeams $deleter)
+    public function deleteOrganization(ValidateOrganizationDeletion $validator, DeletesOrganizations $deleter)
     {
-        $validator->validate(Auth::user(), $this->team);
+        $validator->validate(Auth::user(), $this->organization);
 
-        $deleter->delete($this->team);
+        $deleter->delete($this->organization);
 
         return $this->redirectPath($deleter);
     }
@@ -60,6 +60,6 @@ class DeleteTeamForm extends Component
      */
     public function render()
     {
-        return view('teams.delete-team-form');
+        return view('organizations.delete-organization-form');
     }
 }

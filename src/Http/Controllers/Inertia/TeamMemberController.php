@@ -4,37 +4,37 @@ namespace Laravel\Jetstream\Http\Controllers\Inertia;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Laravel\Jetstream\Actions\UpdateTeamMemberRole;
-use Laravel\Jetstream\Contracts\AddsTeamMembers;
-use Laravel\Jetstream\Contracts\InvitesTeamMembers;
-use Laravel\Jetstream\Contracts\RemovesTeamMembers;
+use Laravel\Jetstream\Actions\UpdateOrganizationMemberRole;
+use Laravel\Jetstream\Contracts\AddsOrganizationMembers;
+use Laravel\Jetstream\Contracts\InvitesOrganizationMembers;
+use Laravel\Jetstream\Contracts\RemovesOrganizationMembers;
 use Laravel\Jetstream\Features;
 use Laravel\Jetstream\Jetstream;
 
-class TeamMemberController extends Controller
+class OrganizationMemberController extends Controller
 {
     /**
-     * Add a new team member to a team.
+     * Add a new organization member to a organization.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $teamId
+     * @param  int  $organizationId
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request, $teamId)
+    public function store(Request $request, $organizationId)
     {
-        $team = Jetstream::newTeamModel()->findOrFail($teamId);
+        $organization = Jetstream::newOrganizationModel()->findOrFail($organizationId);
 
-        if (Features::sendsTeamInvitations()) {
-            app(InvitesTeamMembers::class)->invite(
+        if (Features::sendsOrganizationInvitations()) {
+            app(InvitesOrganizationMembers::class)->invite(
                 $request->user(),
-                $team,
+                $organization,
                 $request->email ?: '',
                 $request->role
             );
         } else {
-            app(AddsTeamMembers::class)->add(
+            app(AddsOrganizationMembers::class)->add(
                 $request->user(),
-                $team,
+                $organization,
                 $request->email ?: '',
                 $request->role
             );
@@ -44,18 +44,18 @@ class TeamMemberController extends Controller
     }
 
     /**
-     * Update the given team member's role.
+     * Update the given organization member's role.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $teamId
+     * @param  int  $organizationId
      * @param  int  $userId
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $teamId, $userId)
+    public function update(Request $request, $organizationId, $userId)
     {
-        app(UpdateTeamMemberRole::class)->update(
+        app(UpdateOrganizationMemberRole::class)->update(
             $request->user(),
-            Jetstream::newTeamModel()->findOrFail($teamId),
+            Jetstream::newOrganizationModel()->findOrFail($organizationId),
             $userId,
             $request->role
         );
@@ -64,20 +64,20 @@ class TeamMemberController extends Controller
     }
 
     /**
-     * Remove the given user from the given team.
+     * Remove the given user from the given organization.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $teamId
+     * @param  int  $organizationId
      * @param  int  $userId
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Request $request, $teamId, $userId)
+    public function destroy(Request $request, $organizationId, $userId)
     {
-        $team = Jetstream::newTeamModel()->findOrFail($teamId);
+        $organization = Jetstream::newOrganizationModel()->findOrFail($organizationId);
 
-        app(RemovesTeamMembers::class)->remove(
+        app(RemovesOrganizationMembers::class)->remove(
             $request->user(),
-            $team,
+            $organization,
             $user = Jetstream::findUserByIdOrFail($userId)
         );
 

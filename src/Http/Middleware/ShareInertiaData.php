@@ -22,16 +22,16 @@ class ShareInertiaData
         Inertia::share(array_filter([
             'jetstream' => function () use ($request) {
                 return [
-                    'canCreateTeams' => $request->user() &&
-                                        Jetstream::hasTeamFeatures() &&
-                                        Gate::forUser($request->user())->check('create', Jetstream::newTeamModel()),
+                    'canCreateOrganizations' => $request->user() &&
+                                        Jetstream::hasOrganizationFeatures() &&
+                                        Gate::forUser($request->user())->check('create', Jetstream::newOrganizationModel()),
                     'canManageTwoFactorAuthentication' => Features::canManageTwoFactorAuthentication(),
                     'canUpdatePassword' => Features::enabled(Features::updatePasswords()),
                     'canUpdateProfileInformation' => Features::canUpdateProfileInformation(),
                     'flash' => $request->session()->get('flash', []),
                     'hasAccountDeletionFeatures' => Jetstream::hasAccountDeletionFeatures(),
                     'hasApiFeatures' => Jetstream::hasApiFeatures(),
-                    'hasTeamFeatures' => Jetstream::hasTeamFeatures(),
+                    'hasOrganizationFeatures' => Jetstream::hasOrganizationFeatures(),
                     'hasTermsAndPrivacyPolicyFeature' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
                     'managesProfilePhotos' => Jetstream::managesProfilePhotos(),
                 ];
@@ -41,12 +41,12 @@ class ShareInertiaData
                     return;
                 }
 
-                if (Jetstream::hasTeamFeatures() && $request->user()) {
-                    $request->user()->currentTeam;
+                if (Jetstream::hasOrganizationFeatures() && $request->user()) {
+                    $request->user()->currentOrganization;
                 }
 
                 return array_merge($request->user()->toArray(), array_filter([
-                    'all_teams' => Jetstream::hasTeamFeatures() ? $request->user()->allTeams() : null,
+                    'all_organizations' => Jetstream::hasOrganizationFeatures() ? $request->user()->allOrganizations() : null,
                 ]), [
                     'two_factor_enabled' => ! is_null($request->user()->two_factor_secret),
                 ]);

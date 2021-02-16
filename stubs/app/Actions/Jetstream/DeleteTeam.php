@@ -2,18 +2,18 @@
 
 namespace App\Actions\Jetstream;
 
-use Laravel\Jetstream\Contracts\DeletesTeams;
+use Laravel\Jetstream\Contracts\DeletesOrganizations;
 
-class DeleteTeam implements DeletesTeams
+class DeleteOrganization implements DeletesOrganizations
 {
     /**
-     * Delete the given team.
+     * Delete the given organization.
      *
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @return void
      */
-    public function delete($team)
+    public function delete($organization)
     {
-        $team->purge();
+        $organization->purge();
     }
 }

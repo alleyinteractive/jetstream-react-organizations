@@ -6,25 +6,25 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-abstract class TeamEvent
+abstract class OrganizationEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * The team instance.
+     * The organization instance.
      *
-     * @var \App\Models\Team
+     * @var \App\Models\Organization
      */
-    public $team;
+    public $organization;
 
     /**
      * Create a new event instance.
      *
-     * @param  \App\Models\Team  $team
+     * @param  \App\Models\Organization  $organization
      * @return void
      */
-    public function __construct($team)
+    public function __construct($organization)
     {
-        $this->team = $team;
+        $this->organization = $organization;
     }
 }

@@ -51,23 +51,23 @@ class Features
     }
 
     /**
-     * Determine if the application is using any team features.
+     * Determine if the application is using any organization features.
      *
      * @return bool
      */
-    public static function hasTeamFeatures()
+    public static function hasOrganizationFeatures()
     {
-        return static::enabled(static::teams());
+        return static::enabled(static::organizations());
     }
 
     /**
-     * Determine if invitations are sent to team members.
+     * Determine if invitations are sent to organization members.
      *
      * @return bool
      */
-    public static function sendsTeamInvitations()
+    public static function sendsOrganizationInvitations()
     {
-        return static::optionEnabled(static::teams(), 'invitations');
+        return static::optionEnabled(static::organizations(), 'invitations');
     }
 
     /**
@@ -111,18 +111,18 @@ class Features
     }
 
     /**
-     * Enable the teams feature.
+     * Enable the organizations feature.
      *
      * @param  array  $options
      * @return string
      */
-    public static function teams(array $options = [])
+    public static function organizations(array $options = [])
     {
         if (! empty($options)) {
-            config(['jetstream-options.teams' => $options]);
+            config(['jetstream-options.organizations' => $options]);
         }
 
-        return 'teams';
+        return 'organizations';
     }
 
     /**

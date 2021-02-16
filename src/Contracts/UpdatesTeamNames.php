@@ -2,15 +2,15 @@
 
 namespace Laravel\Jetstream\Contracts;
 
-interface UpdatesTeamNames
+interface UpdatesOrganizationNames
 {
     /**
-     * Validate and update the given team's name.
+     * Validate and update the given organization's name.
      *
      * @param  mixed  $user
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @param  array  $input
      * @return void
      */
-    public function update($user, $team, array $input);
+    public function update($user, $organization, array $input);
 }

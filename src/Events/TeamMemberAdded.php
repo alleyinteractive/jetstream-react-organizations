@@ -4,19 +4,19 @@ namespace Laravel\Jetstream\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
 
-class TeamMemberAdded
+class OrganizationMemberAdded
 {
     use Dispatchable;
 
     /**
-     * The team instance.
+     * The organization instance.
      *
      * @var mixed
      */
-    public $team;
+    public $organization;
 
     /**
-     * The team member that was added.
+     * The organization member that was added.
      *
      * @var mixed
      */
@@ -25,13 +25,13 @@ class TeamMemberAdded
     /**
      * Create a new event instance.
      *
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @param  mixed  $user
      * @return void
      */
-    public function __construct($team, $user)
+    public function __construct($organization, $user)
     {
-        $this->team = $team;
+        $this->organization = $organization;
         $this->user = $user;
     }
 }

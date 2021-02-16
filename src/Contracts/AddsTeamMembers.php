@@ -2,15 +2,15 @@
 
 namespace Laravel\Jetstream\Contracts;
 
-interface AddsTeamMembers
+interface AddsOrganizationMembers
 {
     /**
-     * Add a new team member to the given team.
+     * Add a new organization member to the given organization.
      *
      * @param  mixed  $user
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @param  string  $email
      * @return void
      */
-    public function add($user, $team, string $email, string $role = null);
+    public function add($user, $organization, string $email, string $role = null);
 }

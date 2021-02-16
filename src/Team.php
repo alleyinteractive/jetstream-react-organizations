@@ -4,10 +4,10 @@ namespace Laravel\Jetstream;
 
 use Illuminate\Database\Eloquent\Model;
 
-abstract class Team extends Model
+abstract class Organization extends Model
 {
     /**
-     * Get the owner of the team.
+     * Get the owner of the organization.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -17,7 +17,7 @@ abstract class Team extends Model
     }
 
     /**
-     * Get all of the team's users including its owner.
+     * Get all of the organization's users including its owner.
      *
      * @return \Illuminate\Support\Collection
      */
@@ -27,7 +27,7 @@ abstract class Team extends Model
     }
 
     /**
-     * Get all of the users that belong to the team.
+     * Get all of the users that belong to the organization.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -40,18 +40,18 @@ abstract class Team extends Model
     }
 
     /**
-     * Determine if the given user belongs to the team.
+     * Determine if the given user belongs to the organization.
      *
      * @param  \App\Models\User  $user
      * @return bool
      */
     public function hasUser($user)
     {
-        return $this->users->contains($user) || $user->ownsTeam($this);
+        return $this->users->contains($user) || $user->ownsOrganization($this);
     }
 
     /**
-     * Determine if the given email address belongs to a user on the team.
+     * Determine if the given email address belongs to a user on the organization.
      *
      * @param  string  $email
      * @return bool
@@ -64,7 +64,7 @@ abstract class Team extends Model
     }
 
     /**
-     * Determine if the given user has the given permission on the team.
+     * Determine if the given user has the given permission on the organization.
      *
      * @param  \App\Models\User  $user
      * @param  string  $permission
@@ -72,30 +72,30 @@ abstract class Team extends Model
      */
     public function userHasPermission($user, $permission)
     {
-        return $user->hasTeamPermission($this, $permission);
+        return $user->hasOrganizationPermission($this, $permission);
     }
 
     /**
-     * Get all of the pending user invitations for the team.
+     * Get all of the pending user invitations for the organization.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function teamInvitations()
+    public function organizationInvitations()
     {
-        return $this->hasMany(Jetstream::teamInvitationModel());
+        return $this->hasMany(Jetstream::organizationInvitationModel());
     }
 
     /**
-     * Remove the given user from the team.
+     * Remove the given user from the organization.
      *
      * @param  \App\Models\User  $user
      * @return void
      */
     public function removeUser($user)
     {
-        if ($user->current_team_id === $this->id) {
+        if ($user->current_organization_id === $this->id) {
             $user->forceFill([
-                'current_team_id' => null,
+                'current_organization_id' => null,
             ])->save();
         }
 
@@ -103,17 +103,17 @@ abstract class Team extends Model
     }
 
     /**
-     * Purge all of the team's resources.
+     * Purge all of the organization's resources.
      *
      * @return void
      */
     public function purge()
     {
-        $this->owner()->where('current_team_id', $this->id)
-                ->update(['current_team_id' => null]);
+        $this->owner()->where('current_organization_id', $this->id)
+                ->update(['current_organization_id' => null]);
 
-        $this->users()->where('current_team_id', $this->id)
-                ->update(['current_team_id' => null]);
+        $this->users()->where('current_organization_id', $this->id)
+                ->update(['current_organization_id' => null]);
 
         $this->users()->detach();
 

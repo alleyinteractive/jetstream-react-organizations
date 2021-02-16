@@ -4,49 +4,49 @@ namespace App\Actions\Jetstream;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
-use Laravel\Jetstream\Contracts\AddsTeamMembers;
-use Laravel\Jetstream\Events\AddingTeamMember;
-use Laravel\Jetstream\Events\TeamMemberAdded;
+use Laravel\Jetstream\Contracts\AddsOrganizationMembers;
+use Laravel\Jetstream\Events\AddingOrganizationMember;
+use Laravel\Jetstream\Events\OrganizationMemberAdded;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Jetstream\Rules\Role;
 
-class AddTeamMember implements AddsTeamMembers
+class AddOrganizationMember implements AddsOrganizationMembers
 {
     /**
-     * Add a new team member to the given team.
+     * Add a new organization member to the given organization.
      *
      * @param  mixed  $user
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @param  string  $email
      * @param  string|null  $role
      * @return void
      */
-    public function add($user, $team, string $email, string $role = null)
+    public function add($user, $organization, string $email, string $role = null)
     {
-        Gate::forUser($user)->authorize('addTeamMember', $team);
+        Gate::forUser($user)->authorize('addOrganizationMember', $organization);
 
-        $this->validate($team, $email, $role);
+        $this->validate($organization, $email, $role);
 
-        $newTeamMember = Jetstream::findUserByEmailOrFail($email);
+        $newOrganizationMember = Jetstream::findUserByEmailOrFail($email);
 
-        AddingTeamMember::dispatch($team, $newTeamMember);
+        AddingOrganizationMember::dispatch($organization, $newOrganizationMember);
 
-        $team->users()->attach(
-            $newTeamMember, ['role' => $role]
+        $organization->users()->attach(
+            $newOrganizationMember, ['role' => $role]
         );
 
-        TeamMemberAdded::dispatch($team, $newTeamMember);
+        OrganizationMemberAdded::dispatch($organization, $newOrganizationMember);
     }
 
     /**
      * Validate the add member operation.
      *
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @param  string  $email
      * @param  string|null  $role
      * @return void
      */
-    protected function validate($team, string $email, ?string $role)
+    protected function validate($organization, string $email, ?string $role)
     {
         Validator::make([
             'email' => $email,
@@ -54,12 +54,12 @@ class AddTeamMember implements AddsTeamMembers
         ], $this->rules(), [
             'email.exists' => __('We were unable to find a registered user with this email address.'),
         ])->after(
-            $this->ensureUserIsNotAlreadyOnTeam($team, $email)
-        )->validateWithBag('addTeamMember');
+            $this->ensureUserIsNotAlreadyOnOrganization($organization, $email)
+        )->validateWithBag('addOrganizationMember');
     }
 
     /**
-     * Get the validation rules for adding a team member.
+     * Get the validation rules for adding a organization member.
      *
      * @return array
      */
@@ -74,19 +74,19 @@ class AddTeamMember implements AddsTeamMembers
     }
 
     /**
-     * Ensure that the user is not already on the team.
+     * Ensure that the user is not already on the organization.
      *
-     * @param  mixed  $team
+     * @param  mixed  $organization
      * @param  string  $email
      * @return \Closure
      */
-    protected function ensureUserIsNotAlreadyOnTeam($team, string $email)
+    protected function ensureUserIsNotAlreadyOnOrganization($organization, string $email)
     {
-        return function ($validator) use ($team, $email) {
+        return function ($validator) use ($organization, $email) {
             $validator->errors()->addIf(
-                $team->hasUserWithEmail($email),
+                $organization->hasUserWithEmail($email),
                 'email',
-                __('This user already belongs to the team.')
+                __('This user already belongs to the organization.')
             );
         };
     }

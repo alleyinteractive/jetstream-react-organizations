@@ -3,27 +3,27 @@
 namespace App\Actions\Jetstream;
 
 use Illuminate\Support\Facades\DB;
-use Laravel\Jetstream\Contracts\DeletesTeams;
+use Laravel\Jetstream\Contracts\DeletesOrganizations;
 use Laravel\Jetstream\Contracts\DeletesUsers;
 
 class DeleteUser implements DeletesUsers
 {
     /**
-     * The team deleter implementation.
+     * The organization deleter implementation.
      *
-     * @var \Laravel\Jetstream\Contracts\DeletesTeams
+     * @var \Laravel\Jetstream\Contracts\DeletesOrganizations
      */
-    protected $deletesTeams;
+    protected $deletesOrganizations;
 
     /**
      * Create a new action instance.
      *
-     * @param  \Laravel\Jetstream\Contracts\DeletesTeams  $deletesTeams
+     * @param  \Laravel\Jetstream\Contracts\DeletesOrganizations  $deletesOrganizations
      * @return void
      */
-    public function __construct(DeletesTeams $deletesTeams)
+    public function __construct(DeletesOrganizations $deletesOrganizations)
     {
-        $this->deletesTeams = $deletesTeams;
+        $this->deletesOrganizations = $deletesOrganizations;
     }
 
     /**
@@ -35,7 +35,7 @@ class DeleteUser implements DeletesUsers
     public function delete($user)
     {
         DB::transaction(function () use ($user) {
-            $this->deleteTeams($user);
+            $this->deleteOrganizations($user);
             $user->deleteProfilePhoto();
             $user->tokens->each->delete();
             $user->delete();
@@ -43,17 +43,17 @@ class DeleteUser implements DeletesUsers
     }
 
     /**
-     * Delete the teams and team associations attached to the user.
+     * Delete the organizations and organization associations attached to the user.
      *
      * @param  mixed  $user
      * @return void
      */
-    protected function deleteTeams($user)
+    protected function deleteOrganizations($user)
     {
-        $user->teams()->detach();
+        $user->organizations()->detach();
 
-        $user->ownedTeams->each(function ($team) {
-            $this->deletesTeams->delete($team);
+        $user->ownedOrganizations->each(function ($organization) {
+            $this->deletesOrganizations->delete($organization);
         });
     }
 }

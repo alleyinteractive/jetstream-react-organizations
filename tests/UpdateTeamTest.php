@@ -2,36 +2,36 @@
 
 namespace Laravel\Jetstream\Tests;
 
-use App\Actions\Jetstream\CreateTeam;
-use App\Actions\Jetstream\UpdateTeamName;
-use App\Models\Team;
+use App\Actions\Jetstream\CreateOrganization;
+use App\Actions\Jetstream\UpdateOrganizationName;
+use App\Models\Organization;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 use Laravel\Jetstream\Jetstream;
-use Laravel\Jetstream\Tests\Fixtures\TeamPolicy;
+use Laravel\Jetstream\Tests\Fixtures\OrganizationPolicy;
 use Laravel\Jetstream\Tests\Fixtures\User;
 
-class UpdateTeamTest extends OrchestraTestCase
+class UpdateOrganizationTest extends OrchestraTestCase
 {
     public function setUp(): void
     {
         parent::setUp();
 
-        Gate::policy(Team::class, TeamPolicy::class);
+        Gate::policy(Organization::class, OrganizationPolicy::class);
         Jetstream::useUserModel(User::class);
     }
 
-    public function test_team_name_can_be_updated()
+    public function test_organization_name_can_be_updated()
     {
         $this->migrate();
 
-        $team = $this->createTeam();
+        $organization = $this->createOrganization();
 
-        $action = new UpdateTeamName;
+        $action = new UpdateOrganizationName;
 
-        $action->update($team->owner, $team, ['name' => 'Test Team Updated']);
+        $action->update($organization->owner, $organization, ['name' => 'Test Organization Updated']);
 
-        $this->assertSame('Test Team Updated', $team->fresh()->name);
+        $this->assertSame('Test Organization Updated', $organization->fresh()->name);
     }
 
     public function test_name_is_required()
@@ -40,16 +40,16 @@ class UpdateTeamTest extends OrchestraTestCase
 
         $this->migrate();
 
-        $team = $this->createTeam();
+        $organization = $this->createOrganization();
 
-        $action = new UpdateTeamName;
+        $action = new UpdateOrganizationName;
 
-        $action->update($team->owner, $team, ['name' => '']);
+        $action->update($organization->owner, $organization, ['name' => '']);
     }
 
-    protected function createTeam()
+    protected function createOrganization()
     {
-        $action = new CreateTeam;
+        $action = new CreateOrganization;
 
         $user = User::forceCreate([
             'name' => 'Taylor Otwell',
@@ -57,7 +57,7 @@ class UpdateTeamTest extends OrchestraTestCase
             'password' => 'secret',
         ]);
 
-        return $action->create($user, ['name' => 'Test Team']);
+        return $action->create($user, ['name' => 'Test Organization']);
     }
 
     protected function migrate()

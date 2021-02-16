@@ -2,7 +2,7 @@
 
 namespace Laravel\Jetstream\Events;
 
-class TeamUpdated extends TeamEvent
+class OrganizationUpdated extends OrganizationEvent
 {
     //
 }

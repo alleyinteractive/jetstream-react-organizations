@@ -1,16 +1,16 @@
 <template>
-    <jet-form-section @submitted="createTeam">
+    <jet-form-section @submitted="createOrganization">
         <template #title>
-            Team Details
+            Organization Details
         </template>
 
         <template #description>
-            Create a new team to collaborate with others on projects.
+            Create a new organization to collaborate with others on projects.
         </template>
 
         <template #form>
             <div class="col-span-6">
-                <jet-label value="Team Owner" />
+                <jet-label value="Organization Owner" />
 
                 <div class="flex items-center mt-2">
                     <img class="w-12 h-12 rounded-full object-cover" :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name">
@@ -23,7 +23,7 @@
             </div>
 
             <div class="col-span-6 sm:col-span-4">
-                <jet-label for="name" value="Team Name" />
+                <jet-label for="name" value="Organization Name" />
                 <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form.name" autofocus />
                 <jet-input-error :message="form.errors.name" class="mt-2" />
             </div>
@@ -62,9 +62,9 @@
         },
 
         methods: {
-            createTeam() {
-                this.form.post(route('teams.store'), {
-                    errorBag: 'createTeam',
+            createOrganization() {
+                this.form.post(route('organizations.store'), {
+                    errorBag: 'createOrganization',
                     preserveScroll: true
                 });
             },

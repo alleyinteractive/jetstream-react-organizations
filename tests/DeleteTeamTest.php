@@ -2,56 +2,56 @@
 
 namespace Laravel\Jetstream\Tests;
 
-use App\Actions\Jetstream\CreateTeam;
-use App\Actions\Jetstream\DeleteTeam;
-use App\Models\Team;
+use App\Actions\Jetstream\CreateOrganization;
+use App\Actions\Jetstream\DeleteOrganization;
+use App\Models\Organization;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
-use Laravel\Jetstream\Actions\ValidateTeamDeletion;
+use Laravel\Jetstream\Actions\ValidateOrganizationDeletion;
 use Laravel\Jetstream\Jetstream;
-use Laravel\Jetstream\Tests\Fixtures\TeamPolicy;
+use Laravel\Jetstream\Tests\Fixtures\OrganizationPolicy;
 use Laravel\Jetstream\Tests\Fixtures\User;
 
-class DeleteTeamTest extends OrchestraTestCase
+class DeleteOrganizationTest extends OrchestraTestCase
 {
     public function setUp(): void
     {
         parent::setUp();
 
-        Gate::policy(Team::class, TeamPolicy::class);
+        Gate::policy(Organization::class, OrganizationPolicy::class);
         Jetstream::useUserModel(User::class);
     }
 
-    public function test_team_can_be_deleted()
+    public function test_organization_can_be_deleted()
     {
         $this->migrate();
 
-        $team = $this->createTeam();
+        $organization = $this->createOrganization();
 
-        $action = new DeleteTeam;
+        $action = new DeleteOrganization;
 
-        $action->delete($team);
+        $action->delete($organization);
 
-        $this->assertNull($team->fresh());
+        $this->assertNull($organization->fresh());
     }
 
-    public function test_team_deletion_can_be_validated()
+    public function test_organization_deletion_can_be_validated()
     {
         Jetstream::useUserModel(User::class);
 
         $this->migrate();
 
-        $team = $this->createTeam();
+        $organization = $this->createOrganization();
 
-        $action = new ValidateTeamDeletion;
+        $action = new ValidateOrganizationDeletion;
 
-        $action->validate($team->owner, $team);
+        $action->validate($organization->owner, $organization);
 
         $this->assertTrue(true);
     }
 
-    public function test_personal_team_cant_be_deleted()
+    public function test_personal_organization_cant_be_deleted()
     {
         $this->expectException(ValidationException::class);
 
@@ -59,16 +59,16 @@ class DeleteTeamTest extends OrchestraTestCase
 
         $this->migrate();
 
-        $team = $this->createTeam();
+        $organization = $this->createOrganization();
 
-        $team->forceFill(['personal_team' => true])->save();
+        $organization->forceFill(['personal_organization' => true])->save();
 
-        $action = new ValidateTeamDeletion;
+        $action = new ValidateOrganizationDeletion;
 
-        $action->validate($team->owner, $team);
+        $action->validate($organization->owner, $organization);
     }
 
-    public function test_non_owner_cant_delete_team()
+    public function test_non_owner_cant_delete_organization()
     {
         $this->expectException(AuthorizationException::class);
 
@@ -76,20 +76,20 @@ class DeleteTeamTest extends OrchestraTestCase
 
         $this->migrate();
 
-        $team = $this->createTeam();
+        $organization = $this->createOrganization();
 
-        $action = new ValidateTeamDeletion;
+        $action = new ValidateOrganizationDeletion;
 
         $action->validate(User::forceCreate([
             'name' => 'Adam Wathan',
             'email' => 'adam@laravel.com',
             'password' => 'secret',
-        ]), $team);
+        ]), $organization);
     }
 
-    protected function createTeam()
+    protected function createOrganization()
     {
-        $action = new CreateTeam;
+        $action = new CreateOrganization;
 
         $user = User::forceCreate([
             'name' => 'Taylor Otwell',
@@ -97,7 +97,7 @@ class DeleteTeamTest extends OrchestraTestCase
             'password' => 'secret',
         ]);
 
-        return $action->create($user, ['name' => 'Test Team']);
+        return $action->create($user, ['name' => 'Test Organization']);
     }
 
     protected function migrate()

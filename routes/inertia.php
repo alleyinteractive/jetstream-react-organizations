@@ -1,17 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Laravel\Jetstream\Http\Controllers\CurrentTeamController;
+use Laravel\Jetstream\Http\Controllers\CurrentOrganizationController;
 use Laravel\Jetstream\Http\Controllers\Inertia\ApiTokenController;
 use Laravel\Jetstream\Http\Controllers\Inertia\CurrentUserController;
 use Laravel\Jetstream\Http\Controllers\Inertia\OtherBrowserSessionsController;
 use Laravel\Jetstream\Http\Controllers\Inertia\PrivacyPolicyController;
 use Laravel\Jetstream\Http\Controllers\Inertia\ProfilePhotoController;
-use Laravel\Jetstream\Http\Controllers\Inertia\TeamController;
-use Laravel\Jetstream\Http\Controllers\Inertia\TeamMemberController;
+use Laravel\Jetstream\Http\Controllers\Inertia\OrganizationController;
+use Laravel\Jetstream\Http\Controllers\Inertia\OrganizationMemberController;
 use Laravel\Jetstream\Http\Controllers\Inertia\TermsOfServiceController;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
-use Laravel\Jetstream\Http\Controllers\TeamInvitationController;
+use Laravel\Jetstream\Http\Controllers\OrganizationInvitationController;
 use Laravel\Jetstream\Jetstream;
 
 Route::group(['middleware' => config('jetstream.middleware', ['web'])], function () {
@@ -44,24 +44,24 @@ Route::group(['middleware' => config('jetstream.middleware', ['web'])], function
             Route::delete('/user/api-tokens/{token}', [ApiTokenController::class, 'destroy'])->name('api-tokens.destroy');
         }
 
-        // Teams...
-        if (Jetstream::hasTeamFeatures()) {
-            Route::get('/teams/create', [TeamController::class, 'create'])->name('teams.create');
-            Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
-            Route::get('/teams/{team}', [TeamController::class, 'show'])->name('teams.show');
-            Route::put('/teams/{team}', [TeamController::class, 'update'])->name('teams.update');
-            Route::delete('/teams/{team}', [TeamController::class, 'destroy'])->name('teams.destroy');
-            Route::put('/current-team', [CurrentTeamController::class, 'update'])->name('current-team.update');
-            Route::post('/teams/{team}/members', [TeamMemberController::class, 'store'])->name('team-members.store');
-            Route::put('/teams/{team}/members/{user}', [TeamMemberController::class, 'update'])->name('team-members.update');
-            Route::delete('/teams/{team}/members/{user}', [TeamMemberController::class, 'destroy'])->name('team-members.destroy');
+        // Organizations...
+        if (Jetstream::hasOrganizationFeatures()) {
+            Route::get('/organizations/create', [OrganizationController::class, 'create'])->name('organizations.create');
+            Route::post('/organizations', [OrganizationController::class, 'store'])->name('organizations.store');
+            Route::get('/organizations/{organization}', [OrganizationController::class, 'show'])->name('organizations.show');
+            Route::put('/organizations/{organization}', [OrganizationController::class, 'update'])->name('organizations.update');
+            Route::delete('/organizations/{organization}', [OrganizationController::class, 'destroy'])->name('organizations.destroy');
+            Route::put('/current-organization', [CurrentOrganizationController::class, 'update'])->name('current-organization.update');
+            Route::post('/organizations/{organization}/members', [OrganizationMemberController::class, 'store'])->name('organization-members.store');
+            Route::put('/organizations/{organization}/members/{user}', [OrganizationMemberController::class, 'update'])->name('organization-members.update');
+            Route::delete('/organizations/{organization}/members/{user}', [OrganizationMemberController::class, 'destroy'])->name('organization-members.destroy');
 
-            Route::get('/team-invitations/{invitation}', [TeamInvitationController::class, 'accept'])
+            Route::get('/organization-invitations/{invitation}', [OrganizationInvitationController::class, 'accept'])
                         ->middleware(['signed'])
-                        ->name('team-invitations.accept');
+                        ->name('organization-invitations.accept');
 
-            Route::delete('/team-invitations/{invitation}', [TeamInvitationController::class, 'destroy'])
-                        ->name('team-invitations.destroy');
+            Route::delete('/organization-invitations/{invitation}', [OrganizationInvitationController::class, 'destroy'])
+                        ->name('organization-invitations.destroy');
         }
     });
 });

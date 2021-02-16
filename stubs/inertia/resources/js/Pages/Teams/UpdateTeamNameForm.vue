@@ -1,43 +1,43 @@
 <template>
-    <jet-form-section @submitted="updateTeamName">
+    <jet-form-section @submitted="updateOrganizationName">
         <template #title>
-            Team Name
+            Organization Name
         </template>
 
         <template #description>
-            The team's name and owner information.
+            The organization's name and owner information.
         </template>
 
         <template #form>
-            <!-- Team Owner Information -->
+            <!-- Organization Owner Information -->
             <div class="col-span-6">
-                <jet-label value="Team Owner" />
+                <jet-label value="Organization Owner" />
 
                 <div class="flex items-center mt-2">
-                    <img class="w-12 h-12 rounded-full object-cover" :src="team.owner.profile_photo_url" :alt="team.owner.name">
+                    <img class="w-12 h-12 rounded-full object-cover" :src="organization.owner.profile_photo_url" :alt="organization.owner.name">
 
                     <div class="ml-4 leading-tight">
-                        <div>{{ team.owner.name }}</div>
-                        <div class="text-gray-700 text-sm">{{ team.owner.email }}</div>
+                        <div>{{ organization.owner.name }}</div>
+                        <div class="text-gray-700 text-sm">{{ organization.owner.email }}</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Team Name -->
+            <!-- Organization Name -->
             <div class="col-span-6 sm:col-span-4">
-                <jet-label for="name" value="Team Name" />
+                <jet-label for="name" value="Organization Name" />
 
                 <jet-input id="name"
                             type="text"
                             class="mt-1 block w-full"
                             v-model="form.name"
-                            :disabled="! permissions.canUpdateTeam" />
+                            :disabled="! permissions.canUpdateOrganization" />
 
                 <jet-input-error :message="form.errors.name" class="mt-2" />
             </div>
         </template>
 
-        <template #actions v-if="permissions.canUpdateTeam">
+        <template #actions v-if="permissions.canUpdateOrganization">
             <jet-action-message :on="form.recentlySuccessful" class="mr-3">
                 Saved.
             </jet-action-message>
@@ -67,20 +67,20 @@
             JetLabel,
         },
 
-        props: ['team', 'permissions'],
+        props: ['organization', 'permissions'],
 
         data() {
             return {
                 form: this.$inertia.form({
-                    name: this.team.name,
+                    name: this.organization.name,
                 })
             }
         },
 
         methods: {
-            updateTeamName() {
-                this.form.put(route('teams.update', this.team), {
-                    errorBag: 'updateTeamName',
+            updateOrganizationName() {
+                this.form.put(route('organizations.update', this.organization), {
+                    errorBag: 'updateOrganizationName',
                     preserveScroll: true
                 });
             },

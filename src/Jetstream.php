@@ -3,13 +3,13 @@
 namespace Laravel\Jetstream;
 
 use Illuminate\Support\Arr;
-use Laravel\Jetstream\Contracts\AddsTeamMembers;
-use Laravel\Jetstream\Contracts\CreatesTeams;
-use Laravel\Jetstream\Contracts\DeletesTeams;
+use Laravel\Jetstream\Contracts\AddsOrganizationMembers;
+use Laravel\Jetstream\Contracts\CreatesOrganizations;
+use Laravel\Jetstream\Contracts\DeletesOrganizations;
 use Laravel\Jetstream\Contracts\DeletesUsers;
-use Laravel\Jetstream\Contracts\InvitesTeamMembers;
-use Laravel\Jetstream\Contracts\RemovesTeamMembers;
-use Laravel\Jetstream\Contracts\UpdatesTeamNames;
+use Laravel\Jetstream\Contracts\InvitesOrganizationMembers;
+use Laravel\Jetstream\Contracts\RemovesOrganizationMembers;
+use Laravel\Jetstream\Contracts\UpdatesOrganizationNames;
 
 class Jetstream
 {
@@ -49,11 +49,11 @@ class Jetstream
     public static $userModel = 'App\\Models\\User';
 
     /**
-     * The team model that should be used by Jetstream.
+     * The organization model that should be used by Jetstream.
      *
      * @var string
      */
-    public static $teamModel = 'App\\Models\\Team';
+    public static $organizationModel = 'App\\Models\\Organization';
 
     /**
      * The membership model that should be used by Jetstream.
@@ -63,11 +63,11 @@ class Jetstream
     public static $membershipModel = 'App\\Models\\Membership';
 
     /**
-     * The team invitation model that should be used by Jetstream.
+     * The organization invitation model that should be used by Jetstream.
      *
      * @var string
      */
-    public static $teamInvitationModel = 'App\\Models\\TeamInvitation';
+    public static $organizationInvitationModel = 'App\\Models\\OrganizationInvitation';
 
     /**
      * The Inertia manager instance.
@@ -186,13 +186,13 @@ class Jetstream
     }
 
     /**
-     * Determine if Jetstream is supporting team features.
+     * Determine if Jetstream is supporting organization features.
      *
      * @return bool
      */
-    public static function hasTeamFeatures()
+    public static function hasOrganizationFeatures()
     {
-        return Features::hasTeamFeatures();
+        return Features::hasOrganizationFeatures();
     }
 
     /**
@@ -273,36 +273,36 @@ class Jetstream
     }
 
     /**
-     * Get the name of the team model used by the application.
+     * Get the name of the organization model used by the application.
      *
      * @return string
      */
-    public static function teamModel()
+    public static function organizationModel()
     {
-        return static::$teamModel;
+        return static::$organizationModel;
     }
 
     /**
-     * Get a new instance of the team model.
+     * Get a new instance of the organization model.
      *
      * @return mixed
      */
-    public static function newTeamModel()
+    public static function newOrganizationModel()
     {
-        $model = static::teamModel();
+        $model = static::organizationModel();
 
         return new $model;
     }
 
     /**
-     * Specify the team model that should be used by Jetstream.
+     * Specify the organization model that should be used by Jetstream.
      *
      * @param  string  $model
      * @return static
      */
-    public static function useTeamModel(string $model)
+    public static function useOrganizationModel(string $model)
     {
-        static::$teamModel = $model;
+        static::$organizationModel = $model;
 
         return new static;
     }
@@ -331,92 +331,92 @@ class Jetstream
     }
 
     /**
-     * Get the name of the team invitation model used by the application.
+     * Get the name of the organization invitation model used by the application.
      *
      * @return string
      */
-    public static function teamInvitationModel()
+    public static function organizationInvitationModel()
     {
-        return static::$teamInvitationModel;
+        return static::$organizationInvitationModel;
     }
 
     /**
-     * Specify the team invitation model that should be used by Jetstream.
+     * Specify the organization invitation model that should be used by Jetstream.
      *
      * @param  string  $model
      * @return static
      */
-    public static function useTeamInvitationModel(string $model)
+    public static function useOrganizationInvitationModel(string $model)
     {
-        static::$teamInvitationModel = $model;
+        static::$organizationInvitationModel = $model;
 
         return new static;
     }
 
     /**
-     * Register a class / callback that should be used to create teams.
+     * Register a class / callback that should be used to create organizations.
      *
      * @param  string  $class
      * @return void
      */
-    public static function createTeamsUsing(string $class)
+    public static function createOrganizationsUsing(string $class)
     {
-        return app()->singleton(CreatesTeams::class, $class);
+        return app()->singleton(CreatesOrganizations::class, $class);
     }
 
     /**
-     * Register a class / callback that should be used to update team names.
+     * Register a class / callback that should be used to update organization names.
      *
      * @param  string  $class
      * @return void
      */
-    public static function updateTeamNamesUsing(string $class)
+    public static function updateOrganizationNamesUsing(string $class)
     {
-        return app()->singleton(UpdatesTeamNames::class, $class);
+        return app()->singleton(UpdatesOrganizationNames::class, $class);
     }
 
     /**
-     * Register a class / callback that should be used to add team members.
+     * Register a class / callback that should be used to add organization members.
      *
      * @param  string  $class
      * @return void
      */
-    public static function addTeamMembersUsing(string $class)
+    public static function addOrganizationMembersUsing(string $class)
     {
-        return app()->singleton(AddsTeamMembers::class, $class);
+        return app()->singleton(AddsOrganizationMembers::class, $class);
     }
 
     /**
-     * Register a class / callback that should be used to add team members.
+     * Register a class / callback that should be used to add organization members.
      *
      * @param  string  $class
      * @return void
      */
-    public static function inviteTeamMembersUsing(string $class)
+    public static function inviteOrganizationMembersUsing(string $class)
     {
-        return app()->singleton(InvitesTeamMembers::class, $class);
+        return app()->singleton(InvitesOrganizationMembers::class, $class);
     }
 
     /**
-     * Register a class / callback that should be used to remove team members.
+     * Register a class / callback that should be used to remove organization members.
      *
      * @param  string  $class
      * @return void
      */
-    public static function removeTeamMembersUsing(string $class)
+    public static function removeOrganizationMembersUsing(string $class)
     {
-        return app()->singleton(RemovesTeamMembers::class, $class);
+        return app()->singleton(RemovesOrganizationMembers::class, $class);
     }
 
     /**
-     * Register a class / callback that should be used to delete teams.
+     * Register a class / callback that should be used to delete organizations.
      *
      * @param  string  $class
      * @return void
      */
-    public static function deleteTeamsUsing(string $class)
+    public static function deleteOrganizationsUsing(string $class)
     {
-        return app()->singleton(DeletesTeams::class, $class);
+        return app()->singleton(DeletesOrganizations::class, $class);
     }
 
     /**

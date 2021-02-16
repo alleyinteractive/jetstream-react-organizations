@@ -6,26 +6,26 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\URL;
-use Laravel\Jetstream\TeamInvitation as TeamInvitationModel;
+use Laravel\Jetstream\OrganizationInvitation as OrganizationInvitationModel;
 
-class TeamInvitation extends Mailable
+class OrganizationInvitation extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
-     * The team invitation instance.
+     * The organization invitation instance.
      *
-     * @var \Laravel\Jetstream\TeamInvitation
+     * @var \Laravel\Jetstream\OrganizationInvitation
      */
     public $invitation;
 
     /**
      * Create a new message instance.
      *
-     * @param  \Laravel\Jetstream\TeamInvitation  $invitation
+     * @param  \Laravel\Jetstream\OrganizationInvitation  $invitation
      * @return void
      */
-    public function __construct(TeamInvitationModel $invitation)
+    public function __construct(OrganizationInvitationModel $invitation)
     {
         $this->invitation = $invitation;
     }
@@ -37,8 +37,8 @@ class TeamInvitation extends Mailable
      */
     public function build()
     {
-        return $this->markdown('jetstream::mail.team-invitation', ['acceptUrl' => URL::signedRoute('team-invitations.accept', [
+        return $this->markdown('jetstream::mail.organization-invitation', ['acceptUrl' => URL::signedRoute('organization-invitations.accept', [
             'invitation' => $this->invitation,
-        ])])->subject(__('Team Invitation'));
+        ])])->subject(__('Organization Invitation'));
     }
 }
