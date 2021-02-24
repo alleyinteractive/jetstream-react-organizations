@@ -193,7 +193,7 @@
 
             <template #footer>
                 <jet-secondary-button @click.native="currentlyManagingRole = false">
-                    Nevermind
+                    Cancel
                 </jet-secondary-button>
 
                 <jet-button class="ml-2" @click.native="updateRole" :class="{ 'opacity-25': updateRoleForm.processing }" :disabled="updateRoleForm.processing">
@@ -214,7 +214,7 @@
 
             <template #footer>
                 <jet-secondary-button @click.native="confirmingLeavingOrganization = false">
-                    Nevermind
+                    Cancel
                 </jet-secondary-button>
 
                 <jet-danger-button class="ml-2" @click.native="leaveOrganization" :class="{ 'opacity-25': leaveOrganizationForm.processing }" :disabled="leaveOrganizationForm.processing">
@@ -235,7 +235,7 @@
 
             <template #footer>
                 <jet-secondary-button @click.native="organizationMemberBeingRemoved = null">
-                    Nevermind
+                    Cancel
                 </jet-secondary-button>
 
                 <jet-danger-button class="ml-2" @click.native="removeOrganizationMember" :class="{ 'opacity-25': removeOrganizationMemberForm.processing }" :disabled="removeOrganizationMemberForm.processing">

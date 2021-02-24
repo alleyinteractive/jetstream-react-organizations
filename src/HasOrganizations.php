@@ -56,7 +56,7 @@ trait HasOrganizations
     /**
      * Get all of the organizations the user owns or belongs to.
      *
-     * @return \Illuminate\Collections\Collection
+     * @return \Illuminate\Support\Collection
      */
     public function allOrganizations()
     {

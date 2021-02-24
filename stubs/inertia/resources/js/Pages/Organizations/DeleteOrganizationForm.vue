@@ -31,7 +31,7 @@
 
                 <template #footer>
                     <jet-secondary-button @click.native="confirmingOrganizationDeletion = false">
-                        Nevermind
+                        Cancel
                     </jet-secondary-button>
 
                     <jet-danger-button class="ml-2" @click.native="deleteOrganization" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
